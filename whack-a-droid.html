@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Whack-A-Droid</title>
+  <link href="https://fonts.googleapis.com/css2?family=Creepster&family=Press+Start+2P&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --hole-color: #8d6e63;
+      --dirt-color: #6d4c41;
+      --ui-bg: #333;
+      --ui-text: #fff;
+    }
+
+    body {
+      font-family: 'Press Start 2P', cursive;
+      background: linear-gradient(135deg, #a8c0ff, #3f2b96);
+      color: var(--ui-text);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+      padding: 10px;
+      text-align: center;
+    }
+
+    .game-container {
+      background-color: rgba(0, 0, 0, 0.4);
+      border-radius: 20px;
+      padding: 15px;
+      border: 5px solid #fff;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+      width: 90vw;
+      max-width: 500px;
+      margin: auto;
+    }
+
+    h1 {
+      font-family: 'Creepster', cursive;
+      font-size: clamp(2rem, 6vw, 3.5rem);
+      color: #ffeb3b;
+      text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7);
+      margin: 0 0 15px;
+    }
+
+    .game-info {
+      display: flex;
+      justify-content: space-between;
+      font-size: clamp(0.6rem, 2.5vw, 1rem);
+      margin-bottom: 15px;
+      padding: 8px 10px;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 10px;
+    }
+
+    .score-box, .time-box {
+      background: var(--ui-bg);
+      padding: 6px 10px;
+      border-radius: 8px;
+      border: 2px solid #fff;
+      min-width: 80px;
+    }
+
+    .game-info span { color: #a7ffeb; }
+
+    .game-board {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 3vw;
+      width: 100%;
+    }
+
+    .hole {
+      background: var(--hole-color);
+      border-radius: 50%;
+      position: relative;
+      aspect-ratio: 1 / 1;
+      border: 0.8vw solid var(--dirt-color);
+      overflow: hidden;
+      box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
+    }
+
+    .mole {
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      height: 100%;
+      transform: translateY(100%);
+      transition: transform 0.3s ease-in-out;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .hole.up .mole { transform: translateY(0); }
+
+    .mole-svg {
+      width: 70%;
+      height: 70%;
+      fill: #3ddc84; /* Android green */
+      animation: bounce 0.5s ease-in-out infinite;
+    }
+
+    @keyframes bounce {
+      50% { transform: translateY(-5px); }
+    }
+
+    .button-group, .message-button-group {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 15px;
+      flex-wrap: wrap;
+    }
+
+    .game-button {
+      font-family: 'Press Start 2P', cursive;
+      background: #ffeb3b;
+      color: var(--ui-bg);
+      border: 3px solid #ff9800;
+      padding: 8px 15px;
+      border-radius: 10px;
+      font-size: clamp(0.7rem, 3vw, 1rem);
+      cursor: pointer;
+      box-shadow: 0 5px 0 #ff9800;
+      transition: 0.1s;
+    }
+
+    .game-button:active {
+      transform: translateY(5px);
+      box-shadow: none;
+    }
+
+    .hidden { display: none; }
+
+    .message-box {
+      position: fixed;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      background: var(--ui-bg);
+      border: 3px solid #fff;
+      border-radius: 10px;
+      padding: 20px;
+      text-align: center;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+      z-index: 1000;
+      width: 80vw;
+      max-width: 400px;
+    }
+
+    .message-box h2 { color: #a7ffeb; margin: 0 0 10px; }
+
+    .overlay {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.7);
+      z-index: 999;
+    }
+  </style>
+</head>
+<body>
+  <div class="game-container">
+    <h1>Whack-A-Droid</h1>
+    <div class="game-info">
+      <div class="score-box">Score: <span id="score">0</span></div>
+      <div class="time-box">Time: <span id="time-left">30</span>s</div>
+    </div>
+
+    <div class="game-board" id="game-board"></div>
+
+    <div class="button-group">
+      <button id="start-button" class="game-button">Start</button>
+      <button id="restart-button" class="game-button hidden">Restart</button>
+      <button id="end-button" class="game-button hidden">End</button>
+    </div>
+  </div>
+
+  <div id="overlay" class="overlay hidden"></div>
+  <div id="message-box" class="message-box hidden">
+    <h2 id="message-title"></h2>
+    <p id="message-text"></p>
+    <div class="message-button-group">
+      <button id="ok-button" class="game-button">OK</button>
+      <button id="msg-restart" class="game-button">Restart</button>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const board = document.getElementById('game-board');
+      const scoreEl = document.getElementById('score');
+      const timeEl = document.getElementById('time-left');
+      const startBtn = document.getElementById('start-button');
+      const restartBtn = document.getElementById('restart-button');
+      const endBtn = document.getElementById('end-button');
+      const overlay = document.getElementById('overlay');
+      const msgBox = document.getElementById('message-box');
+      const msgTitle = document.getElementById('message-title');
+      const msgText = document.getElementById('message-text');
+      const okBtn = document.getElementById('ok-button');
+      const msgRestart = document.getElementById('msg-restart');
+
+      const GAME_TIME = 30;
+      let score = 0, timeLeft = GAME_TIME;
+      let gameRunning = false, timer, moleTimer, lastHole;
+
+      // Build 9 holes dynamically
+      for (let i = 0; i < 9; i++) {
+        const hole = document.createElement('div');
+        hole.className = 'hole';
+        hole.innerHTML = `
+          <div class="mole">
+            <svg class="mole-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960">
+              <path d="M40-239q8-106 65-196.5T256-579l-75-129q-3-9-.5-18t10.5-14q9-5 19.5-2t15.5 12l74 127q86-37 180-37t180 37l75-127q5-9 15.5-12t19.5 2q8 5 11.5 14.5T780-708l-76 129q94 53 151 143.5T920-239H40Zm240-110q20 0 35-15t15-35q0-20-15-35t-35-15q-20 0-35 15t-15 35q0 20 15 35t35 15Zm400 0q20 0 35-15t15-35q0-20-15-35t-35-15q-20 0-35 15t-15 35q0 20 15 35t35 15Z"/>
+            </svg>
+          </div>`;
+        board.appendChild(hole);
+
+        hole.querySelector('.mole').addEventListener('click', () => {
+          if (!gameRunning || !hole.classList.contains('up')) return;
+          score++;
+          scoreEl.textContent = score;
+          hole.classList.remove('up');
+        });
+      }
+      const holes = document.querySelectorAll('.hole');
+
+      function randomHole() {
+        const idx = Math.floor(Math.random() * holes.length);
+        if (holes[idx] === lastHole) return randomHole();
+        lastHole = holes[idx];
+        return holes[idx];
+      }
+
+      function popUp() {
+        if (!gameRunning) return;
+        const hole = randomHole();
+        hole.classList.add('up');
+        moleTimer = setTimeout(() => {
+          hole.classList.remove('up');
+          popUp();
+        }, Math.random() * 1000 + 500);
+      }
+
+      function startGame() {
+        reset();
+        score = 0; timeLeft = GAME_TIME;
+        scoreEl.textContent = score;
+        timeEl.textContent = timeLeft;
+        gameRunning = true;
+
+        startBtn.classList.add('hidden');
+        restartBtn.classList.remove('hidden');
+        endBtn.classList.remove('hidden');
+
+        timer = setInterval(() => {
+          timeLeft--;
+          timeEl.textContent = timeLeft;
+          if (timeLeft <= 0) endGame("time");
+        }, 1000);
+
+        popUp();
+      }
+
+      function reset() {
+        clearInterval(timer);
+        clearTimeout(moleTimer);
+        holes.forEach(h => h.classList.remove('up'));
+        gameRunning = false;
+      }
+
+      function endGame(reason) {
+        reset();
+        const title = reason === "manual" ? "Game Ended" : "Game Over!";
+        msgTitle.textContent = title;
+        msgText.textContent = `Your score: ${score}`;
+        overlay.classList.remove('hidden');
+        msgBox.classList.remove('hidden');
+        startBtn.classList.add('hidden');
+        restartBtn.classList.add('hidden');
+        endBtn.classList.add('hidden');
+      }
+
+      function hideMessage() {
+        overlay.classList.add('hidden');
+        msgBox.classList.add('hidden');
+        startBtn.classList.remove('hidden');
+      }
+
+      startBtn.addEventListener('click', startGame);
+      restartBtn.addEventListener('click', startGame);
+      endBtn.addEventListener('click', () => endGame("manual"));
+      okBtn.addEventListener('click', hideMessage);
+      msgRestart.addEventListener('click', () => { hideMessage(); startGame(); });
+    });
+  </script>
+</body>
+</html>

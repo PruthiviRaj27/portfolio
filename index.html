@@ -1,12 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Pruthivi Raj | Android Developer</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <style>
-    * {margin:0; padding:0; box-sizing:border-box;}
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
     body {
       font-family: 'Segoe UI', sans-serif;
       background: #0f0f0f;
@@ -20,7 +26,8 @@
       position: fixed;
       width: 100%;
       height: 100%;
-      top: 0; left: 0;
+      top: 0;
+      left: 0;
       z-index: -1;
       background: radial-gradient(circle at top, #1a1a1a, #000);
     }
@@ -30,17 +37,20 @@
       padding: 80px 15px 60px;
       position: relative;
     }
+
     header h1 {
       font-size: clamp(2rem, 5vw, 3em);
-      background: linear-gradient(90deg,#00d4ff,#00ff88);
+      background: linear-gradient(90deg, #00d4ff, #00ff88);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
+
     header p {
       font-size: clamp(1rem, 2.5vw, 1.2em);
       opacity: 0.85;
       margin-top: 10px;
     }
+
     .android-icon {
       font-size: clamp(3rem, 8vw, 4em);
       color: #00ff88;
@@ -56,17 +66,19 @@
       flex-wrap: wrap;
       gap: 12px;
     }
+
     nav a {
       text-decoration: none;
       font-weight: bold;
       padding: 8px 16px;
       border-radius: 25px;
-      background: rgba(255,255,255,0.08);
+      background: rgba(255, 255, 255, 0.08);
       color: #00d4ff;
       backdrop-filter: blur(8px);
       transition: 0.3s;
       font-size: 0.95rem;
     }
+
     nav a:hover {
       background: #00d4ff;
       color: #000;
@@ -95,9 +107,11 @@
         gap: 15px;
         margin-top: 20px;
       }
+
       nav.show {
         display: flex;
       }
+
       .nav-toggle {
         display: block;
       }
@@ -108,13 +122,14 @@
       margin: 60px auto;
       padding: 25px;
       border-radius: 20px;
-      background: rgba(255,255,255,0.05);
+      background: rgba(255, 255, 255, 0.05);
       backdrop-filter: blur(20px);
-      box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
       opacity: 0;
       transform: translateY(60px);
       transition: all 0.8s ease-out;
     }
+
     section.visible {
       opacity: 1;
       transform: translateY(0);
@@ -130,13 +145,13 @@
 
     .card-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px,1fr));
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
       gap: 20px;
     }
 
     .card {
       border-radius: 20px;
-      background: rgba(0,0,0,0.6);
+      background: rgba(0, 0, 0, 0.6);
       text-align: center;
       padding: 20px;
       display: flex;
@@ -147,16 +162,19 @@
       box-shadow: 0 0 12px rgba(0, 212, 255, 0.4);
       transition: transform 0.4s, box-shadow 0.4s;
     }
+
     .card:hover {
       transform: translateY(-6px) scale(1.03);
       box-shadow: 0 0 25px rgba(0, 255, 200, 0.7);
     }
+
     .card i {
       font-size: 2em;
       margin-bottom: 10px;
       color: #00ff88;
       text-shadow: 0 0 15px #00ff88;
     }
+
     .card p {
       font-size: 0.95rem;
     }
@@ -169,17 +187,31 @@
     }
 
     @keyframes float {
-      0%,100% {transform: translateY(0);}
-      50% {transform: translateY(-12px);}
+
+      0%,
+      100% {
+        transform: translateY(0);
+      }
+
+      50% {
+        transform: translateY(-12px);
+      }
     }
 
     /* Responsive spacing */
     @media (max-width: 500px) {
-      section { margin: 40px 15px; padding: 20px; }
-      .card { padding: 15px; }
+      section {
+        margin: 40px 15px;
+        padding: 20px;
+      }
+
+      .card {
+        padding: 15px;
+      }
     }
   </style>
 </head>
+
 <body>
   <canvas id="particles"></canvas>
 
@@ -207,8 +239,9 @@
   <!-- About -->
   <section id="about">
     <h2>About Me</h2>
-    <p>I’m an Android Developer with 3 years of experience in designing and building scalable mobile applications.  
-    Skilled in Kotlin, Java, Jetpack libraries, and modern Android architectures, with a strong focus on clean code, performance, and great user experience.</p>
+    <p>I’m an Android Developer with 3 years of experience in designing and building scalable mobile applications.
+      Skilled in Kotlin, Java, Jetpack libraries, and modern Android architectures, with a strong focus on clean code,
+      performance, and great user experience.</p>
   </section>
 
   <!-- Experience -->
@@ -219,10 +252,10 @@
         <i class="fas fa-briefcase"></i>
         <h3>Testpress</h3>
         <p>Android Developer (Jul 2022 – Present)<br>
-        • Developed and maintained LMS Android app.<br>
-        • Built Video Hosting SDK with DRM & Offline support.<br>
-        • Integrated REST APIs, FCM push notifications, custom views, and deep links.<br>
-        • Automated releases using GitHub Actions & Fastlane.</p>
+          • Developed and maintained LMS Android app.<br>
+          • Built Video Hosting SDK with DRM & Offline support.<br>
+          • Integrated REST APIs, FCM push notifications, custom views, and deep links.<br>
+          • Automated releases using GitHub Actions & Fastlane.</p>
       </div>
     </div>
   </section>
@@ -234,7 +267,8 @@
       <div class="card">
         <i class="fas fa-play-circle"></i>
         <h3>Tpstreams Player SDK</h3>
-        <p>Advanced Android video SDK built on ExoPlayer with Widevine DRM, AES Encryption, HLS/DASH/RTMP, and offline playback.</p>
+        <p>Advanced Android video SDK built on ExoPlayer with Widevine DRM, AES Encryption, HLS/DASH/RTMP, and offline
+          playback.</p>
       </div>
       <div class="card">
         <i class="fas fa-graduation-cap"></i>
@@ -248,15 +282,27 @@
   <section id="skills">
     <h2>Skills</h2>
     <div class="card-grid">
-      <div class="card"><i class="fas fa-code"></i><p>Kotlin, Java</p></div>
-      <div class="card"><i class="fas fa-layer-group"></i><p>MVVM, Clean Architecture, Repository Pattern</p></div>
-      <div class="card"><i class="fas fa-mobile-alt"></i><p>Jetpack Compose, Android Jetpack Libraries</p></div>
-      <div class="card"><i class="fas fa-network-wired"></i><p>Retrofit, OkHttp, REST APIs</p></div>
-      <div class="card"><i class="fas fa-play"></i><p>ExoPlayer, DRM (Widevine), AES Encryption</p></div>
-      <div class="card"><i class="fas fa-tools"></i><p>Gradle, GitHub, Firebase, Fastlane, Play Console</p></div>
+      <div class="card"><i class="fas fa-code"></i>
+        <p>Kotlin, Java</p>
+      </div>
+      <div class="card"><i class="fas fa-layer-group"></i>
+        <p>MVVM, Clean Architecture, Repository Pattern</p>
+      </div>
+      <div class="card"><i class="fas fa-mobile-alt"></i>
+        <p>Jetpack Compose, Android Jetpack Libraries</p>
+      </div>
+      <div class="card"><i class="fas fa-network-wired"></i>
+        <p>Retrofit, OkHttp, REST APIs</p>
+      </div>
+      <div class="card"><i class="fas fa-play"></i>
+        <p>ExoPlayer, DRM (Widevine), AES Encryption</p>
+      </div>
+      <div class="card"><i class="fas fa-tools"></i>
+        <p>Gradle, GitHub, Firebase, Fastlane, Play Console</p>
+      </div>
     </div>
   </section>
-  
+
   <!-- Personal Products -->
   <section id="products">
     <h2>Products</h2>
@@ -265,13 +311,15 @@
         <i class="fas fa-calculator"></i>
         <h3>DCA Calculator</h3>
         <p>Play Store financial calculator app with 1k+ installs, multi-language support, and high precision.</p>
-        <p><a href="https://play.google.com/store/apps/details?id=com.prteknology.dca" target="_blank">▶ Play Store</a></p>
+        <p><a href="https://play.google.com/store/apps/details?id=com.prteknology.dca" target="_blank">▶ Play Store</a>
+        </p>
       </div>
       <div class="card">
         <i class="fas fa-video"></i>
         <h3>Simple Video Player</h3>
         <p>Offline media player supporting MP4, MKV, AVI with smooth playback and intuitive navigation.</p>
-        <p><a href="https://play.google.com/store/apps/details?id=com.tentek.videoplayer" target="_blank">▶ Play Store</a></p>
+        <p><a href="https://play.google.com/store/apps/details?id=com.tentek.videoplayer" target="_blank">▶ Play
+            Store</a></p>
       </div>
     </div>
   </section>
@@ -297,20 +345,38 @@
 
   <!-- Game Section -->
   <section id="game">
-    <h2>Play My Game</h2>
+    <h2>Play My Games</h2>
     <div class="card-grid">
+
+      <!-- Android Wars Card -->
       <div class="card">
-        <img src="assets/android-wars-poster.png" alt="Android Wars Poster" style="width:200px; margin-bottom:15px; border-radius:12px; border:2px solid #00ff88;">
+        <img src="assets/android-wars-poster.png" alt="Android Wars Poster"
+          style="width:200px; margin-bottom:15px; border-radius:12px; border:2px solid #00ff88;">
         <h3>Android Wars</h3>
-        <p>You’ve seen my work — now try my game! 🚀 Can you beat the high score in <b>Android Wars</b>?  
-        Guide the Android hero, dodge enemies, and survive as long as you can!</p>
-        <button onclick="window.location.href='android-wars.html'" style="margin-top:12px; padding:10px 20px; border:none; border-radius:8px; background:#00d4ff; color:#000; font-weight:bold; cursor:pointer; transition:0.3s;">
+        <p>You’ve seen my work — now try my game! 🚀 Can you beat the high score in <b>Android Wars</b>?
+          Guide the Android hero, dodge enemies, and survive as long as you can!</p>
+        <button onclick="window.location.href='android-wars.html'"
+          style="margin-top:12px; padding:10px 20px; border:none; border-radius:8px; background:#00d4ff; color:#000; font-weight:bold; cursor:pointer; transition:0.3s;">
           ▶ Play Now
         </button>
       </div>
+
+      <!-- Whack-A-Droid Card -->
+      <div class="card">
+        <img src="assets/whack-a-droid-poster.png" alt="Whack-A-Droid Poster"
+          style="width:200px; margin-bottom:15px; border-radius:12px; border:2px solid #ffeb3b;">
+        <h3>Whack-A-Droid</h3>
+        <p>Ready to test your reflexes? ⚡ Smash those sneaky Android droids as they pop out of their holes in
+          <b>Whack-A-Droid</b>!
+          Tap fast, rack up points, and see if you can set a new high score! 🎯</p>
+        <button onclick="window.location.href='whack-a-droid.html'"
+          style="margin-top:12px; padding:10px 20px; border:none; border-radius:8px; background:#ffeb3b; color:#000; font-weight:bold; cursor:pointer; transition:0.3s;">
+          ▶ Play Now
+        </button>
+      </div>
+
     </div>
   </section>
-
 
   <script>
     // Scroll reveal
@@ -356,13 +422,13 @@
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       particles.forEach(p => {
         ctx.beginPath();
-        ctx.arc(p.x, p.y, p.radius, 0, Math.PI*2);
+        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
         ctx.fillStyle = "#00d4ff";
         ctx.fill();
         p.x += p.dx;
         p.y += p.dy;
-        if(p.x < 0 || p.x > canvas.width) p.dx *= -1;
-        if(p.y < 0 || p.y > canvas.height) p.dy *= -1;
+        if (p.x < 0 || p.x > canvas.width) p.dx *= -1;
+        if (p.y < 0 || p.y > canvas.height) p.dy *= -1;
       });
       requestAnimationFrame(drawParticles);
     }
@@ -379,5 +445,5 @@
     });
   </script>
 </body>
-</html>
 
+</html>
