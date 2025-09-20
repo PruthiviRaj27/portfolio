@@ -1,246 +1,340 @@
 <!doctype html>
 <html lang="en">
+
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>Retro Shooter — Hero ADB Icon</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+  <title>Android Wars</title>
 
-<!-- Material Symbols for hero and villain -->
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=adb,android" />
+  <!-- Material Symbols for hero and villain -->
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=adb,android" />
 
-<style>
-html,body { height:100%; margin:0; background:#000; color:#fff; font-family:Inter, Arial, sans-serif; }
-#gameCanvas { display:block; width:100%; height:100vh; touch-action:none; -webkit-tap-highlight-color: transparent; }
-.ui { position:fixed; left:12px; top:12px; z-index:20; pointer-events:none; user-select:none; font-size:16px; }
-.controls { position:fixed; left:50%; transform:translateX(-50%); bottom:18px; z-index:22; display:flex; gap:12px; }
-.control-btn { width:64px; height:64px; border-radius:12px; display:flex; align-items:center; justify-content:center;
-  font-size:22px; user-select:none; -webkit-user-select:none; touch-action:none; background:rgba(255,255,255,0.04); color:#fff; }
-@media (min-width:900px){ .controls { display:none; } }
-.overlay { position:fixed; top:0; left:0; right:0; bottom:0;
-  display:flex; align-items:center; justify-content:center;
-  flex-direction:column; background:rgba(0,0,0,0.65); color:#fff;
-  font-size:32px; z-index:30; visibility:hidden; }
-.overlay button { margin-top:20px; padding:12px 24px; font-size:18px;
-  background:#34ff7a; border:none; border-radius:8px; cursor:pointer; }
+  <!-- Standard favicon -->
+  <link rel="shortcut icon" href="assets/android_wars/favicon.ico" type="image/x-icon">
 
-.material-symbols-outlined {
-  font-variation-settings:
-    'FILL' 0,
-    'wght' 400,
-    'GRAD' 0,
-    'opsz' 48;
-  display:inline-block;
-}
-</style>
+  <!-- PNG favicons for modern browsers -->
+  <link rel="icon" type="image/png" sizes="16x16" href="assets/android_wars/favicon-16x16.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/android_wars/favicon-32x32.png">
+
+  <!-- Android / Chrome icons -->
+  <link rel="icon" type="image/png" sizes="192x192" href="assets/android_wars/android-chrome-192x192.png">
+  <link rel="icon" type="image/png" sizes="512x512" href="assets/android_wars/android-chrome-512x512.png">
+
+  <!-- Apple Touch Icon (iOS home screen) -->
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/android_wars/apple-touch-icon.png">
+
+  <!-- Web App Manifest (PWA) -->
+  <link rel="manifest" href="assets/android_wars/site.webmanifest">
+
+  <style>
+    html,
+    body {
+      height: 100%;
+      margin: 0;
+      background: #000;
+      color: #fff;
+      font-family: Inter, Arial, sans-serif;
+    }
+
+    #gameCanvas {
+      display: block;
+      width: 100%;
+      height: 100vh;
+      touch-action: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .ui {
+      position: fixed;
+      left: 12px;
+      top: 12px;
+      z-index: 20;
+      pointer-events: none;
+      user-select: none;
+      font-size: 16px;
+    }
+
+    .controls {
+      position: fixed;
+      left: 50%;
+      transform: translateX(-50%);
+      bottom: 18px;
+      z-index: 22;
+      display: flex;
+      gap: 12px;
+    }
+
+    .control-btn {
+      width: 64px;
+      height: 64px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      user-select: none;
+      -webkit-user-select: none;
+      touch-action: none;
+      background: rgba(255, 255, 255, 0.04);
+      color: #fff;
+    }
+
+    @media (min-width:900px) {
+      .controls {
+        display: none;
+      }
+    }
+
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      background: rgba(0, 0, 0, 0.65);
+      color: #fff;
+      font-size: 32px;
+      z-index: 30;
+      visibility: hidden;
+    }
+
+    .overlay button {
+      margin-top: 20px;
+      padding: 12px 24px;
+      font-size: 18px;
+      background: #34ff7a;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    .material-symbols-outlined {
+      font-variation-settings:
+        'FILL' 0,
+        'wght' 400,
+        'GRAD' 0,
+        'opsz' 48;
+      display: inline-block;
+    }
+  </style>
 </head>
+
 <body>
-<div class="ui">Score: <span id="score">0</span> | Level: <span id="level">1</span></div>
-<canvas id="gameCanvas"></canvas>
-<div class="controls" id="controls" style="display:none;">
-  <div class="control-btn" id="btn-left">◀</div>
-  <div class="control-btn" id="btn-right">▶</div>
-</div>
-<div class="overlay" id="gameOverOverlay">
-  <div id="gameOverText">Game Over</div>
-  <button id="restartBtn">Restart</button>
-</div>
+  <div class="ui">Score: <span id="score">0</span> | Level: <span id="level">1</span></div>
+  <canvas id="gameCanvas"></canvas>
+  <div class="controls" id="controls" style="display:none;">
+    <div class="control-btn" id="btn-left">◀</div>
+    <div class="control-btn" id="btn-right">▶</div>
+  </div>
+  <div class="overlay" id="gameOverOverlay">
+    <div id="gameOverText">Game Over</div>
+    <button id="restartBtn">Restart</button>
+  </div>
 
-<script>
-(() => {
-const canvas=document.getElementById('gameCanvas');
-const ctx=canvas.getContext('2d',{alpha:false});
-function resizeCanvas(){
-  const dpr=window.devicePixelRatio||1;
-  const cssW=window.innerWidth, cssH=window.innerHeight;
-  canvas.style.width=cssW+'px'; canvas.style.height=cssH+'px';
-  canvas.width=Math.floor(cssW*dpr); canvas.height=Math.floor(cssH*dpr);
-  ctx.setTransform(dpr,0,0,dpr,0,0);
-}
-window.addEventListener('resize',resizeCanvas); resizeCanvas();
-
-const HERO_W=48,HERO_H=48,BASE_HERO_SPEED=420;
-const BASE_BULLET_SPEED=780,BASE_FIRE_RATE=2,BULLET_R=4;
-const BASE_ENEMY_W=40,BASE_ENEMY_H=40,BASE_ENEMY_SPEED=120,BASE_ENEMY_SPAWN=1.2;
-
-function cssWidth(){ return canvas.width/(window.devicePixelRatio||1); }
-function cssHeight(){ return canvas.height/(window.devicePixelRatio||1); }
-
-const keys={left:false,right:false};
-let isPointerDown=false,gameOver=false;
-
-let level=1;
-const LEVEL_THRESHOLDS=[0,100,250,450,700];
-const VILLAIN_COLORS=['#ff595e','#ffca3a','#1982c4','#6a4c93','#ffa500'];
-
-let HERO_SPEED=BASE_HERO_SPEED;
-let FIRE_RATE=BASE_FIRE_RATE;
-let ENEMY_SPEED=BASE_ENEMY_SPEED;
-let ENEMY_SPAWN=BASE_ENEMY_SPAWN;
-
-const hero={x:cssWidth()/2,y:cssHeight()-90,w:HERO_W,h:HERO_H,targetX:null,
-  draw(){
-    ctx.save();
-    ctx.translate(this.x,this.y);
-    ctx.fillStyle='#34ff7a';
-    ctx.font = `${this.w}px 'Material Symbols Outlined'`;
-    ctx.textAlign='center';
-    ctx.textBaseline='middle';
-    ctx.fillText('adb',0,0); // Hero icon
-    ctx.restore();
-  },
-  update(dt){
-    let vx=0; if(keys.left) vx-=1; if(keys.right) vx+=1;
-    if(vx!==0){ this.x+=vx*HERO_SPEED*dt; this.targetX=null; }
-    else if(this.targetX!==null){
-      const dx=this.targetX-this.x;
-      if(Math.abs(dx)<1){ if(!isPointerDown)this.targetX=null; this.x=this.targetX; }
-      else { const dir=Math.sign(dx),move=dir*HERO_SPEED*dt;
-        if(Math.abs(move)>=Math.abs(dx)){ this.x=this.targetX; if(!isPointerDown)this.targetX=null; }
-        else this.x+=move;
+  <script>
+    (() => {
+      const canvas = document.getElementById('gameCanvas');
+      const ctx = canvas.getContext('2d', { alpha: false });
+      function resizeCanvas() {
+        const dpr = window.devicePixelRatio || 1;
+        const cssW = window.innerWidth, cssH = window.innerHeight;
+        canvas.style.width = cssW + 'px'; canvas.style.height = cssH + 'px';
+        canvas.width = Math.floor(cssW * dpr); canvas.height = Math.floor(cssH * dpr);
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       }
-    }
-    const half=this.w/2; this.x=Math.max(half,Math.min(cssWidth()-half,this.x));
-    this.y=cssHeight()-90;
-  }
-};
+      window.addEventListener('resize', resizeCanvas); resizeCanvas();
 
-const bullets=[]; function spawnBullet(x,y){ bullets.push({x,y,r:BULLET_R,vy:-BASE_BULLET_SPEED}); }
-const enemies=[]; function spawnEnemy(){
-  const x=Math.random()*(cssWidth()-BASE_ENEMY_W)+BASE_ENEMY_W/2;
-  enemies.push({
-    x,
-    y:-BASE_ENEMY_H,
-    w:BASE_ENEMY_W,
-    h:BASE_ENEMY_H,
-    vy:ENEMY_SPEED,
-    color: VILLAIN_COLORS[level-1] || '#fff'
-  });
-}
+      const HERO_W = 48, HERO_H = 48, BASE_HERO_SPEED = 420;
+      const BASE_BULLET_SPEED = 780, BASE_FIRE_RATE = 2, BULLET_R = 4;
+      const BASE_ENEMY_W = 40, BASE_ENEMY_H = 40, BASE_ENEMY_SPEED = 120, BASE_ENEMY_SPAWN = 1.2;
 
-let fireAccum=0, fireInterval=1/FIRE_RATE;
-let enemyAccum=0, enemyInterval=ENEMY_SPAWN;
-let score=0;
-const scoreEl=document.getElementById('score'), levelEl=document.getElementById('level');
+      function cssWidth() { return canvas.width / (window.devicePixelRatio || 1); }
+      function cssHeight() { return canvas.height / (window.devicePixelRatio || 1); }
 
-function resetGame(){
-  bullets.length=0; enemies.length=0; score=0; level=1;
-  HERO_SPEED=BASE_HERO_SPEED; FIRE_RATE=BASE_FIRE_RATE; ENEMY_SPEED=BASE_ENEMY_SPEED; ENEMY_SPAWN=BASE_ENEMY_SPAWN;
-  scoreEl.textContent=score; levelEl.textContent=level;
-  hero.x=cssWidth()/2; hero.targetX=null; gameOver=false;
-  document.getElementById('gameOverOverlay').style.visibility='hidden';
-}
+      const keys = { left: false, right: false };
+      let isPointerDown = false, gameOver = false;
 
-function checkLevel(){
-  for(let i=LEVEL_THRESHOLDS.length-1;i>=0;i--){
-    if(score>=LEVEL_THRESHOLDS[i]){
-      if(level!==i+1){ level=i+1; onLevelUp(); }
-      break;
-    }
-  }
-}
+      let level = 1;
+      const LEVEL_THRESHOLDS = [0, 100, 250, 450, 700];
+      const VILLAIN_COLORS = ['#ff595e', '#ffca3a', '#1982c4', '#6a4c93', '#ffa500'];
 
-function onLevelUp(){
-  HERO_SPEED=BASE_HERO_SPEED*(1 + (level-1)*0.1* (cssWidth()/800));
-  FIRE_RATE=Math.min(BASE_FIRE_RATE+(level-1)*0.5,8);
-  ENEMY_SPEED=BASE_ENEMY_SPEED+(level-1)*40;
-  ENEMY_SPAWN=Math.max(0.5, BASE_ENEMY_SPAWN-(level-1)*0.15);
-  fireInterval=1/FIRE_RATE;
-  enemyInterval=ENEMY_SPAWN;
-  levelEl.textContent=level;
-}
+      let HERO_SPEED = BASE_HERO_SPEED;
+      let FIRE_RATE = BASE_FIRE_RATE;
+      let ENEMY_SPEED = BASE_ENEMY_SPEED;
+      let ENEMY_SPAWN = BASE_ENEMY_SPAWN;
 
-function update(dt){
-  if(gameOver) return;
-  hero.update(dt);
+      const hero = {
+        x: cssWidth() / 2, y: cssHeight() - 90, w: HERO_W, h: HERO_H, targetX: null,
+        draw() {
+          ctx.save();
+          ctx.translate(this.x, this.y);
+          ctx.fillStyle = '#34ff7a';
+          ctx.font = `${this.w}px 'Material Symbols Outlined'`;
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+          ctx.fillText('adb', 0, 0); // Hero icon
+          ctx.restore();
+        },
+        update(dt) {
+          let vx = 0; if (keys.left) vx -= 1; if (keys.right) vx += 1;
+          if (vx !== 0) { this.x += vx * HERO_SPEED * dt; this.targetX = null; }
+          else if (this.targetX !== null) {
+            const dx = this.targetX - this.x;
+            if (Math.abs(dx) < 1) { if (!isPointerDown) this.targetX = null; this.x = this.targetX; }
+            else {
+              const dir = Math.sign(dx), move = dir * HERO_SPEED * dt;
+              if (Math.abs(move) >= Math.abs(dx)) { this.x = this.targetX; if (!isPointerDown) this.targetX = null; }
+              else this.x += move;
+            }
+          }
+          const half = this.w / 2; this.x = Math.max(half, Math.min(cssWidth() - half, this.x));
+          this.y = cssHeight() - 90;
+        }
+      };
 
-  fireAccum+=dt; while(fireAccum>=fireInterval){ fireAccum-=fireInterval; spawnBullet(hero.x,hero.y-hero.h/2-8); }
-  enemyAccum+=dt; while(enemyAccum>=enemyInterval){ enemyAccum-=enemyInterval; spawnEnemy(); }
-
-  for(let i=bullets.length-1;i>=0;i--){ bullets[i].y+=bullets[i].vy*dt; if(bullets[i].y<-10) bullets.splice(i,1); }
-  for(let i=enemies.length-1;i>=0;i--){ enemies[i].y+=enemies[i].vy*dt; if(enemies[i].y>cssHeight()+40) enemies.splice(i,1); }
-
-  // bullet-enemy collisions
-  for(let i=enemies.length-1;i>=0;i--){
-    const e=enemies[i];
-    for(let j=bullets.length-1;j>=0;j--){
-      const b=bullets[j];
-      if(b.x>e.x-e.w/2 && b.x<e.x+e.w/2 && b.y>e.y-e.h/2 && b.y<e.y+e.h/2){
-        enemies.splice(i,1); bullets.splice(j,1); score+=10; scoreEl.textContent=score; checkLevel(); break;
+      const bullets = []; function spawnBullet(x, y) { bullets.push({ x, y, r: BULLET_R, vy: -BASE_BULLET_SPEED }); }
+      const enemies = []; function spawnEnemy() {
+        const x = Math.random() * (cssWidth() - BASE_ENEMY_W) + BASE_ENEMY_W / 2;
+        enemies.push({
+          x,
+          y: -BASE_ENEMY_H,
+          w: BASE_ENEMY_W,
+          h: BASE_ENEMY_H,
+          vy: ENEMY_SPEED,
+          color: VILLAIN_COLORS[level - 1] || '#fff'
+        });
       }
-    }
-  }
 
-  // enemy-hero collisions
-  for(const e of enemies){
-    if(Math.abs(e.x-hero.x)<(e.w/2+hero.w/2) && Math.abs(e.y-hero.y)<(e.h/2+hero.h/2)){
-      gameOver=true; document.getElementById('gameOverOverlay').style.visibility='visible';
-    }
-  }
-}
+      let fireAccum = 0, fireInterval = 1 / FIRE_RATE;
+      let enemyAccum = 0, enemyInterval = ENEMY_SPAWN;
+      let score = 0;
+      const scoreEl = document.getElementById('score'), levelEl = document.getElementById('level');
 
-function draw(){
-  ctx.clearRect(0,0,cssWidth(),cssHeight());
-  const g=ctx.createLinearGradient(0,0,0,cssHeight()); g.addColorStop(0,'#001219'); g.addColorStop(1,'#000'); ctx.fillStyle=g;
-  ctx.fillRect(0,0,cssWidth(),cssHeight());
-  ctx.fillStyle='#fff'; for(let i=0;i<60;i++){ const sx=(i*97)%cssWidth(),sy=(i*53+120)%cssHeight(),sr=((i*13)%3)+0.5; ctx.fillRect(sx,sy,sr,sr); }
-  hero.draw();
-  ctx.fillStyle='#ffd166'; for(const b of bullets){ ctx.beginPath(); ctx.arc(b.x,b.y,b.r,0,Math.PI*2); ctx.fill(); }
+      function resetGame() {
+        bullets.length = 0; enemies.length = 0; score = 0; level = 1;
+        HERO_SPEED = BASE_HERO_SPEED; FIRE_RATE = BASE_FIRE_RATE; ENEMY_SPEED = BASE_ENEMY_SPEED; ENEMY_SPAWN = BASE_ENEMY_SPAWN;
+        scoreEl.textContent = score; levelEl.textContent = level;
+        hero.x = cssWidth() / 2; hero.targetX = null; gameOver = false;
+        document.getElementById('gameOverOverlay').style.visibility = 'hidden';
+      }
 
-  // draw villain icons
-  for(const e of enemies){
-    ctx.save();
-    ctx.translate(e.x,e.y);
-    ctx.fillStyle=e.color;
-    ctx.font = `${e.w}px 'Material Symbols Outlined'`;
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    ctx.fillText('android', 0, 0);
-    ctx.restore();
-  }
-}
+      function checkLevel() {
+        for (let i = LEVEL_THRESHOLDS.length - 1; i >= 0; i--) {
+          if (score >= LEVEL_THRESHOLDS[i]) {
+            if (level !== i + 1) { level = i + 1; onLevelUp(); }
+            break;
+          }
+        }
+      }
 
-let last=performance.now();
-function loop(now){ 
-  const dt=Math.min((now-last)/1000,0.05); 
-  last=now; 
-  update(dt); 
-  draw(); 
-  requestAnimationFrame(loop); 
-}
-requestAnimationFrame(loop);
+      function onLevelUp() {
+        HERO_SPEED = BASE_HERO_SPEED * (1 + (level - 1) * 0.1 * (cssWidth() / 800));
+        FIRE_RATE = Math.min(BASE_FIRE_RATE + (level - 1) * 0.5, 8);
+        ENEMY_SPEED = BASE_ENEMY_SPEED + (level - 1) * 40;
+        ENEMY_SPAWN = Math.max(0.5, BASE_ENEMY_SPAWN - (level - 1) * 0.15);
+        fireInterval = 1 / FIRE_RATE;
+        enemyInterval = ENEMY_SPAWN;
+        levelEl.textContent = level;
+      }
 
-// input handlers
-window.addEventListener('keydown',(e)=>{
-  if(e.key==='ArrowLeft'||e.key==='a'||e.key==='A') keys.left=true;
-  if(e.key==='ArrowRight'||e.key==='d'||e.key==='D') keys.right=true;
-  if(gameOver && (e.key==='Enter'||e.key===' ')) resetGame();
-});
-window.addEventListener('keyup',(e)=>{
-  if(e.key==='ArrowLeft'||e.key==='a'||e.key==='A') keys.left=false;
-  if(e.key==='ArrowRight'||e.key==='d'||e.key==='D') keys.right=false;
-});
+      function update(dt) {
+        if (gameOver) return;
+        hero.update(dt);
 
-function getCanvasPos(e){ 
-  const r=canvas.getBoundingClientRect(); 
-  const t=e.touches?e.touches[0]:e; 
-  return {x:t.clientX-r.left,y:t.clientY-r.top}; 
-}
-canvas.addEventListener('touchstart',e=>{ e.preventDefault(); isPointerDown=true; hero.targetX=getCanvasPos(e).x; },{passive:false});
-canvas.addEventListener('touchmove',e=>{ e.preventDefault(); hero.targetX=getCanvasPos(e).x; },{passive:false});
-canvas.addEventListener('touchend',e=>{ e.preventDefault(); isPointerDown=false; },{passive:false});
-canvas.addEventListener('mousedown',e=>{ hero.targetX=getCanvasPos(e).x; });
-canvas.addEventListener('mousemove',e=>{ if(e.buttons&1) hero.targetX=getCanvasPos(e).x; });
+        fireAccum += dt; while (fireAccum >= fireInterval) { fireAccum -= fireInterval; spawnBullet(hero.x, hero.y - hero.h / 2 - 8); }
+        enemyAccum += dt; while (enemyAccum >= enemyInterval) { enemyAccum -= enemyInterval; spawnEnemy(); }
 
-const controlsEl=document.getElementById('controls');
-function showControls(){ controlsEl.style.display=window.innerWidth<900?'flex':'none'; }
-showControls(); window.addEventListener('resize',showControls);
-document.getElementById('btn-left').addEventListener('touchstart',e=>{e.preventDefault();keys.left=true;},{passive:false});
-document.getElementById('btn-left').addEventListener('touchend',e=>{e.preventDefault();keys.left=false;},{passive:false});
-document.getElementById('btn-right').addEventListener('touchstart',e=>{e.preventDefault();keys.right=true;},{passive:false});
-document.getElementById('btn-right').addEventListener('touchend',e=>{e.preventDefault();keys.right=false;},{passive:false});
-document.getElementById('restartBtn').addEventListener('click',resetGame);
+        for (let i = bullets.length - 1; i >= 0; i--) { bullets[i].y += bullets[i].vy * dt; if (bullets[i].y < -10) bullets.splice(i, 1); }
+        for (let i = enemies.length - 1; i >= 0; i--) { enemies[i].y += enemies[i].vy * dt; if (enemies[i].y > cssHeight() + 40) enemies.splice(i, 1); }
 
-})();
-</script>
+        // bullet-enemy collisions
+        for (let i = enemies.length - 1; i >= 0; i--) {
+          const e = enemies[i];
+          for (let j = bullets.length - 1; j >= 0; j--) {
+            const b = bullets[j];
+            if (b.x > e.x - e.w / 2 && b.x < e.x + e.w / 2 && b.y > e.y - e.h / 2 && b.y < e.y + e.h / 2) {
+              enemies.splice(i, 1); bullets.splice(j, 1); score += 10; scoreEl.textContent = score; checkLevel(); break;
+            }
+          }
+        }
+
+        // enemy-hero collisions
+        for (const e of enemies) {
+          if (Math.abs(e.x - hero.x) < (e.w / 2 + hero.w / 2) && Math.abs(e.y - hero.y) < (e.h / 2 + hero.h / 2)) {
+            gameOver = true; document.getElementById('gameOverOverlay').style.visibility = 'visible';
+          }
+        }
+      }
+
+      function draw() {
+        ctx.clearRect(0, 0, cssWidth(), cssHeight());
+        const g = ctx.createLinearGradient(0, 0, 0, cssHeight()); g.addColorStop(0, '#001219'); g.addColorStop(1, '#000'); ctx.fillStyle = g;
+        ctx.fillRect(0, 0, cssWidth(), cssHeight());
+        ctx.fillStyle = '#fff'; for (let i = 0; i < 60; i++) { const sx = (i * 97) % cssWidth(), sy = (i * 53 + 120) % cssHeight(), sr = ((i * 13) % 3) + 0.5; ctx.fillRect(sx, sy, sr, sr); }
+        hero.draw();
+        ctx.fillStyle = '#ffd166'; for (const b of bullets) { ctx.beginPath(); ctx.arc(b.x, b.y, b.r, 0, Math.PI * 2); ctx.fill(); }
+
+        // draw villain icons
+        for (const e of enemies) {
+          ctx.save();
+          ctx.translate(e.x, e.y);
+          ctx.fillStyle = e.color;
+          ctx.font = `${e.w}px 'Material Symbols Outlined'`;
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+          ctx.fillText('android', 0, 0);
+          ctx.restore();
+        }
+      }
+
+      let last = performance.now();
+      function loop(now) {
+        const dt = Math.min((now - last) / 1000, 0.05);
+        last = now;
+        update(dt);
+        draw();
+        requestAnimationFrame(loop);
+      }
+      requestAnimationFrame(loop);
+
+      // input handlers
+      window.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') keys.left = true;
+        if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') keys.right = true;
+        if (gameOver && (e.key === 'Enter' || e.key === ' ')) resetGame();
+      });
+      window.addEventListener('keyup', (e) => {
+        if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') keys.left = false;
+        if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') keys.right = false;
+      });
+
+      function getCanvasPos(e) {
+        const r = canvas.getBoundingClientRect();
+        const t = e.touches ? e.touches[0] : e;
+        return { x: t.clientX - r.left, y: t.clientY - r.top };
+      }
+      canvas.addEventListener('touchstart', e => { e.preventDefault(); isPointerDown = true; hero.targetX = getCanvasPos(e).x; }, { passive: false });
+      canvas.addEventListener('touchmove', e => { e.preventDefault(); hero.targetX = getCanvasPos(e).x; }, { passive: false });
+      canvas.addEventListener('touchend', e => { e.preventDefault(); isPointerDown = false; }, { passive: false });
+      canvas.addEventListener('mousedown', e => { hero.targetX = getCanvasPos(e).x; });
+      canvas.addEventListener('mousemove', e => { if (e.buttons & 1) hero.targetX = getCanvasPos(e).x; });
+
+      const controlsEl = document.getElementById('controls');
+      function showControls() { controlsEl.style.display = window.innerWidth < 900 ? 'flex' : 'none'; }
+      showControls(); window.addEventListener('resize', showControls);
+      document.getElementById('btn-left').addEventListener('touchstart', e => { e.preventDefault(); keys.left = true; }, { passive: false });
+      document.getElementById('btn-left').addEventListener('touchend', e => { e.preventDefault(); keys.left = false; }, { passive: false });
+      document.getElementById('btn-right').addEventListener('touchstart', e => { e.preventDefault(); keys.right = true; }, { passive: false });
+      document.getElementById('btn-right').addEventListener('touchend', e => { e.preventDefault(); keys.right = false; }, { passive: false });
+      document.getElementById('restartBtn').addEventListener('click', resetGame);
+
+    })();
+  </script>
 </body>
+
 </html>
