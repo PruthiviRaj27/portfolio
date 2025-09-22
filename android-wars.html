@@ -169,6 +169,17 @@
 </head>
 
 <body>
+  <div class="overlay" id="startOverlay" style="visibility:visible;">
+    <div class="gameover-container">
+      <div class="gameover-title">
+        <span style="color:#34ff7a;">Android</span>
+        <span style="color:#ff595e;">Wars</span>
+      </div>
+      <div class="gameover-buttons">
+        <button id="startBtn" style="background:#34ff7a;color:#000;">Play</button>
+      </div>
+    </div>
+  </div>
   <div class="ui-container">
     <div class="ui">Score: <span id="score">0</span> | Level: <span id="level">1</span></div>
   </div>
@@ -388,7 +399,6 @@
         draw();
         requestAnimationFrame(loop);
       }
-      requestAnimationFrame(loop);
 
       // input handlers
       window.addEventListener('keydown', (e) => {
@@ -420,6 +430,14 @@
       document.getElementById('btn-right').addEventListener('touchstart', e => { e.preventDefault(); keys.right = true; }, { passive: false });
       document.getElementById('btn-right').addEventListener('touchend', e => { e.preventDefault(); keys.right = false; }, { passive: false });
       document.getElementById('restartBtn').addEventListener('click', resetGame);
+
+      const startOverlay = document.getElementById('startOverlay');
+      const startBtn = document.getElementById('startBtn');
+
+      startBtn.addEventListener('click', () => {
+        startOverlay.style.visibility = 'hidden';
+        requestAnimationFrame(loop);
+      });
 
     })();
   </script>
