@@ -89,7 +89,7 @@
       color: #fff;
     }
 
-    @media (min-width:900px) {
+    @media (min-width: 900px) {
       .controls {
         display: none;
       }
@@ -104,22 +104,57 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      flex-direction: column;
-      background: rgba(0, 0, 0, 0.65);
-      color: #fff;
-      font-size: 32px;
+      background: rgba(0, 0, 0, 0.75);
       z-index: 30;
       visibility: hidden;
     }
 
-    .overlay button {
-      margin-top: 20px;
-      padding: 12px 24px;
+    .gameover-container {
+      background: #111;
+      padding: 32px 24px;
+      border-radius: 16px;
+      text-align: center;
+      width: 280px;
+      max-width: 90%;
+      box-shadow: 0 0 16px rgba(255, 255, 255, 0.2);
+    }
+
+    .gameover-title {
+      font-size: 32px;
+      font-weight: bold;
+      margin-bottom: 16px;
+      color: #ff595e;
+    }
+
+    .game-stats {
       font-size: 18px;
-      background: #34ff7a;
+      margin-bottom: 24px;
+      color: #fff;
+    }
+
+    .game-stats div {
+      margin: 8px 0;
+    }
+
+    .gameover-buttons button {
+      display: block;
+      width: 100%;
+      padding: 12px 0;
+      font-size: 18px;
+      margin-top: 12px;
       border: none;
-      border-radius: 8px;
+      border-radius: 12px;
       cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    #restartBtn {
+      background: #ff595e;
+      color: #fff;
+    }
+
+    #restartBtn:hover {
+      background: #e0484e;
     }
 
     .material-symbols-outlined {
@@ -143,8 +178,16 @@
     <div class="control-btn" id="btn-right">▶</div>
   </div>
   <div class="overlay" id="gameOverOverlay">
-    <div id="gameOverText">Game Over</div>
-    <button id="restartBtn">Restart</button>
+    <div class="gameover-container">
+      <div class="gameover-title">Game Over</div>
+      <div class="game-stats">
+        <div>Score: <span id="finalScore">0</span></div>
+        <div>Level Reached: <span id="finalLevel">1</span></div>
+      </div>
+      <div class="gameover-buttons">
+        <button id="restartBtn">Restart</button>
+      </div>
+    </div>
   </div>
   
   <audio id="shootingAudio" src="assets/android_wars/audio/shooting.wav" preload="auto"></audio>
@@ -260,6 +303,13 @@
         document.getElementById('gameOverOverlay').style.visibility = 'hidden';
       }
 
+      function showGameOver() {
+        document.getElementById('finalScore').textContent = score;
+        document.getElementById('finalLevel').textContent = level;
+        document.getElementById('gameOverOverlay').style.visibility = 'visible';
+        playSound(gameOverAudio);
+      }
+
       function checkLevel() {
         for (let i = LEVEL_THRESHOLDS.length - 1; i >= 0; i--) {
           if (score >= LEVEL_THRESHOLDS[i]) {
@@ -305,8 +355,7 @@
         // enemy-hero collisions
         for (const e of enemies) {
           if (Math.abs(e.x - hero.x) < (e.w / 2 + hero.w / 2) && Math.abs(e.y - hero.y) < (e.h / 2 + hero.h / 2)) {
-            gameOver = true; document.getElementById('gameOverOverlay').style.visibility = 'visible';
-            playSound(gameOverAudio);
+            gameOver = true; showGameOver();
           }
         }
       }
