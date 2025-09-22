@@ -440,13 +440,13 @@
         return { x: t.clientX - r.left, y: t.clientY - r.top };
       }
 
-      function resumeGame() {
-        console.log("Resuming game after rewarded ad...");
-        gameOver = false; // remove game over state
-        enemies.length = 0;
-        document.getElementById('gameOverOverlay').style.visibility = 'hidden';
-        requestAnimationFrame(loop);
-      }
+      window.resumeGame = function() {
+          console.log("Resuming game after rewarded ad...");
+          gameOver = false;
+          enemies.length = 0;
+          document.getElementById('gameOverOverlay').style.visibility = 'hidden';
+          requestAnimationFrame(loop);
+      };
 
       const controlsEl = document.getElementById('controls');
       function showControls() { controlsEl.style.display = window.innerWidth < 900 ? 'flex' : 'none'; }
