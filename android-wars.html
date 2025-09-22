@@ -146,6 +146,10 @@
     <div id="gameOverText">Game Over</div>
     <button id="restartBtn">Restart</button>
   </div>
+  
+  <audio id="shootingAudio" src="assets/android_wars/audio/shooting.wav" preload="auto"></audio>
+  <audio id="blastAudio" src="assets/android_wars/audio/blast.wav" preload="auto"></audio>
+  <audio id="gameOverAudio" src="assets/android_wars/audio/game-over.wav" preload="auto"></audio>
 
   <script>
     (() => {
@@ -170,6 +174,22 @@
 
       function cssWidth() { return canvas.width / (window.devicePixelRatio || 1); }
       function cssHeight() { return canvas.height / (window.devicePixelRatio || 1); }
+
+      const shootingAudio = document.getElementById('shootingAudio');
+      const blastAudio = document.getElementById('blastAudio');
+      const gameOverAudio = document.getElementById('gameOverAudio');
+
+      const playSound = (audioElement) => {
+        if (audioElement) {
+          try {
+            const sound = audioElement.cloneNode();
+            sound.volume = 0.5;
+            sound.play();
+          } catch (e) {
+            console.error("Failed to play sound:", e);
+          }
+        }
+      };
 
       const keys = { left: false, right: false };
       let isPointerDown = false, gameOver = false;
@@ -211,7 +231,10 @@
         }
       };
 
-      const bullets = []; function spawnBullet(x, y) { bullets.push({ x, y, r: BULLET_R, vy: -BASE_BULLET_SPEED }); }
+      const bullets = []; function spawnBullet(x, y) {
+        bullets.push({ x, y, r: BULLET_R, vy: -BASE_BULLET_SPEED });
+        playSound(shootingAudio);
+      }
       const enemies = []; function spawnEnemy() {
         const x = Math.random() * (cssWidth() - BASE_ENEMY_W) + BASE_ENEMY_W / 2;
         enemies.push({
@@ -272,7 +295,9 @@
           for (let j = bullets.length - 1; j >= 0; j--) {
             const b = bullets[j];
             if (b.x > e.x - e.w / 2 && b.x < e.x + e.w / 2 && b.y > e.y - e.h / 2 && b.y < e.y + e.h / 2) {
-              enemies.splice(i, 1); bullets.splice(j, 1); score += 10; scoreEl.textContent = score; checkLevel(); break;
+              enemies.splice(i, 1); bullets.splice(j, 1); score += 10; scoreEl.textContent = score; checkLevel();
+              playSound(blastAudio);
+              break;
             }
           }
         }
@@ -281,6 +306,7 @@
         for (const e of enemies) {
           if (Math.abs(e.x - hero.x) < (e.w / 2 + hero.w / 2) && Math.abs(e.y - hero.y) < (e.h / 2 + hero.h / 2)) {
             gameOver = true; document.getElementById('gameOverOverlay').style.visibility = 'visible';
+            playSound(gameOverAudio);
           }
         }
       }
