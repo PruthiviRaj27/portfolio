@@ -75,9 +75,9 @@
     }
 
     .control-btn {
-      width: 64px;
-      height: 64px;
-      border-radius: 12px;
+      width: 100px;
+      height: 48px;
+      border-radius: 8px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -85,8 +85,10 @@
       user-select: none;
       -webkit-user-select: none;
       touch-action: none;
-      background: rgba(255, 255, 255, 0.04);
+      background: rgba(255, 255, 255, 0.08);
       color: #fff;
+      border: 1px solid #34ff7a;
+      box-shadow: 0 0 6px rgba(52, 255, 122, 0.4);
     }
 
     @media (min-width: 900px) {
@@ -436,11 +438,6 @@
         const t = e.touches ? e.touches[0] : e;
         return { x: t.clientX - r.left, y: t.clientY - r.top };
       }
-      canvas.addEventListener('touchstart', e => { e.preventDefault(); isPointerDown = true; hero.targetX = getCanvasPos(e).x; }, { passive: false });
-      canvas.addEventListener('touchmove', e => { e.preventDefault(); hero.targetX = getCanvasPos(e).x; }, { passive: false });
-      canvas.addEventListener('touchend', e => { e.preventDefault(); isPointerDown = false; }, { passive: false });
-      canvas.addEventListener('mousedown', e => { hero.targetX = getCanvasPos(e).x; });
-      canvas.addEventListener('mousemove', e => { if (e.buttons & 1) hero.targetX = getCanvasPos(e).x; });
 
       const controlsEl = document.getElementById('controls');
       function showControls() { controlsEl.style.display = window.innerWidth < 900 ? 'flex' : 'none'; }
