@@ -1,0 +1,491 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+  <title>Android Wars</title>
+
+  <!-- Material Symbols for hero and villain -->
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=adb,android" />
+
+  <!-- Standard favicon -->
+  <link rel="shortcut icon" href="assets/android_wars/favicon.ico" type="image/x-icon">
+
+  <!-- PNG favicons for modern browsers -->
+  <link rel="icon" type="image/png" sizes="16x16" href="assets/android_wars/favicon-16x16.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/android_wars/favicon-32x32.png">
+
+  <!-- Android / Chrome icons -->
+  <link rel="icon" type="image/png" sizes="192x192" href="assets/android_wars/android-chrome-192x192.png">
+  <link rel="icon" type="image/png" sizes="512x512" href="assets/android_wars/android-chrome-512x512.png">
+
+  <!-- Apple Touch Icon (iOS home screen) -->
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/android_wars/apple-touch-icon.png">
+
+  <!-- Web App Manifest (PWA) -->
+  <link rel="manifest" href="assets/android_wars/site.webmanifest">
+
+  <style>
+    html,
+    body {
+      height: 100%;
+      margin: 0;
+      background: #000;
+      color: #fff;
+      font-family: Inter, Arial, sans-serif;
+    }
+
+    #gameCanvas {
+      display: block;
+      width: 100%;
+      height: 100vh;
+      touch-action: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .ui-container {
+      position: fixed;
+      left: 12px;
+      top: 12px;
+      z-index: 20;
+      pointer-events: none;
+      user-select: none;
+      background-color: rgba(255, 255, 255, 0.1);
+      padding: 8px 16px;
+      border-radius: 10px;
+      backdrop-filter: blur(5px);
+      -webkit-backdrop-filter: blur(5px);
+    }
+    
+    .ui {
+      color: #fff;
+      font-size: 16px;
+    }
+
+    .controls {
+      position: fixed;
+      left: 50%;
+      transform: translateX(-50%);
+      bottom: 18px;
+      z-index: 22;
+      display: flex;
+      gap: 12px;
+    }
+
+    .control-btn {
+      width: 100px;
+      height: 48px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      user-select: none;
+      -webkit-user-select: none;
+      touch-action: none;
+      background: rgba(255, 255, 255, 0.08);
+      color: #fff;
+      border: 1px solid #34ff7a;
+      box-shadow: 0 0 6px rgba(52, 255, 122, 0.4);
+    }
+
+    @media (min-width: 900px) {
+      .controls {
+        display: none;
+      }
+    }
+
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0, 0, 0, 0.75);
+      z-index: 30;
+      visibility: hidden;
+    }
+
+    .gameover-container {
+      background: #111;
+      padding: 32px 24px;
+      border-radius: 16px;
+      text-align: center;
+      width: 280px;
+      max-width: 90%;
+      box-shadow: 0 0 16px rgba(255, 255, 255, 0.2);
+    }
+
+    .gameover-title {
+      font-size: 32px;
+      font-weight: bold;
+      margin-bottom: 16px;
+      color: #ff595e;
+    }
+
+    .game-stats {
+      font-size: 18px;
+      margin-bottom: 24px;
+      color: #fff;
+    }
+
+    .game-stats div {
+      margin: 8px 0;
+    }
+
+    .gameover-buttons button {
+      display: block;
+      width: 100%;
+      padding: 12px 0;
+      font-size: 18px;
+      margin-top: 12px;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .mute-btn {
+      position: fixed;
+      right: 12px;
+      top: 12px;
+      z-index: 25;
+      font-size: 28px;
+      cursor: pointer;
+      user-select: none;
+      background: rgba(255, 255, 255, 0.1);
+      padding: 6px 10px;
+      border-radius: 10px;
+      backdrop-filter: blur(5px);
+      -webkit-backdrop-filter: blur(5px);
+    }
+
+    #restartBtn {
+      background: #ff595e;
+      color: #fff;
+    }
+
+    #restartBtn:hover {
+      background: #e0484e;
+    }
+
+    .material-symbols-outlined {
+      font-variation-settings:
+        'FILL' 0,
+        'wght' 400,
+        'GRAD' 0,
+        'opsz' 48;
+      display: inline-block;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="overlay" id="startOverlay" style="visibility:visible;">
+    <div class="gameover-container">
+      <div class="gameover-title">
+        <span style="color:#34ff7a;">Android</span>
+        <span style="color:#ff595e;">Wars</span>
+      </div>
+      <div class="gameover-buttons">
+        <button id="startBtn" style="background:#34ff7a;color:#000;">Play</button>
+      </div>
+    </div>
+  </div>
+  <div class="ui-container">
+    <div class="ui">Score: <span id="score">0</span> | Level: <span id="level">1</span></div>
+  </div>
+  <div class="mute-btn" id="muteBtn">
+  🔊
+</div>
+  <canvas id="gameCanvas"></canvas>
+  <div class="controls" id="controls" style="display:none;">
+    <div class="control-btn" id="btn-left">◀</div>
+    <div class="control-btn" id="btn-right">▶</div>
+  </div>
+  <div class="overlay" id="gameOverOverlay">
+    <div class="gameover-container">
+      <div class="gameover-title">Game Over</div>
+      <div class="game-stats">
+        <div>Score: <span id="finalScore">0</span></div>
+        <div>Level Reached: <span id="finalLevel">1</span></div>
+      </div>
+      <div class="gameover-buttons">
+        <button id="resumeBtn">▶ Watch Ad to Resume</button>
+        <button id="restartBtn">Restart</button>
+      </div>
+    </div>
+  </div>
+  
+  <audio id="shootingAudio" src="assets/android_wars/audio/shooting.wav" preload="auto"></audio>
+  <audio id="blastAudio" src="assets/android_wars/audio/blast.wav" preload="auto"></audio>
+  <audio id="gameOverAudio" src="assets/android_wars/audio/game-over.wav" preload="auto"></audio>
+
+  <script>
+    (() => {
+      const canvas = document.getElementById('gameCanvas');
+      const ctx = canvas.getContext('2d', { alpha: false });
+      const heroPath = "M200-520v-40q0-72 32.5-131.5T320-789l-75-75 35-36 85 85q26-12 55.5-18.5T480-840q30 0 59.5 6.5T595-815l85-85 35 36-75 75q55 38 87.5 97.5T760-560v40H200Zm400-80q17 0 28.5-11.5T640-640q0-17-11.5-28.5T600-680q-17 0-28.5 11.5T560-640q0 17 11.5 28.5T600-600Zm-240 0q17 0 28.5-11.5T400-640q0-17-11.5-28.5T360-680q-17 0-28.5 11.5T320-640q0 17 11.5 28.5T360-600ZM480-40q-117 0-198.5-81.5T200-320v-160h560v160q0 117-81.5 198.5T480-40Z";
+      const enemyPath = "M40-240q9-107 65.5-197T256-580l-74-128q-6-9-3-19t13-15q8-5 18-2t16 12l74 128q86-36 180-36t180 36l74-128q6-9 16-12t18 2q10 5 13 15t-3 19l-74 128q94 53 150.5 143T920-240H40Zm240-110q21 0 35.5-14.5T330-400q0-21-14.5-35.5T280-450q-21 0-35.5 14.5T230-400q0 21 14.5 35.5T280-350Zm400 0q21 0 35.5-14.5T730-400q0-21-14.5-35.5T680-450q-21 0-35.5 14.5T630-400q0 21 14.5 35.5T680-350Z";
+      const heroShape = new Path2D(heroPath);
+      const enemyShape = new Path2D(enemyPath);
+      function resizeCanvas() {
+        const dpr = window.devicePixelRatio || 1;
+        const cssW = window.innerWidth, cssH = window.innerHeight;
+        canvas.style.width = cssW + 'px'; canvas.style.height = cssH + 'px';
+        canvas.width = Math.floor(cssW * dpr); canvas.height = Math.floor(cssH * dpr);
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      }
+      window.addEventListener('resize', resizeCanvas); resizeCanvas();
+
+      const HERO_W = 48, HERO_H = 48, BASE_HERO_SPEED = 420;
+      const BASE_BULLET_SPEED = 780, BASE_FIRE_RATE = 2, BULLET_R = 4;
+      const BASE_ENEMY_W = 40, BASE_ENEMY_H = 40, BASE_ENEMY_SPEED = 120, BASE_ENEMY_SPAWN = 1.2;
+
+      function cssWidth() { return canvas.width / (window.devicePixelRatio || 1); }
+      function cssHeight() { return canvas.height / (window.devicePixelRatio || 1); }
+
+      const shootingAudio = document.getElementById('shootingAudio');
+      const blastAudio = document.getElementById('blastAudio');
+      const gameOverAudio = document.getElementById('gameOverAudio');
+
+      let isMuted = false;
+      const playSound = (audioElement) => {
+        if (audioElement) {
+          if (isMuted) return;
+          try {
+            const sound = audioElement.cloneNode();
+            sound.volume = 0.5;
+            sound.play();
+          } catch (e) {
+            console.error("Failed to play sound:", e);
+          }
+        }
+      };
+
+      const keys = { left: false, right: false };
+      let isPointerDown = false, gameOver = false;
+
+      let level = 1;
+      const LEVEL_THRESHOLDS = [0, 100, 450, 900, 1800];
+      const VILLAIN_COLORS = ['#ff595e', '#ffca3a', '#1982c4', '#6a4c93', '#ffa500'];
+
+      let HERO_SPEED = BASE_HERO_SPEED;
+      let FIRE_RATE = BASE_FIRE_RATE;
+      let ENEMY_SPEED = BASE_ENEMY_SPEED;
+      let ENEMY_SPAWN = BASE_ENEMY_SPAWN;
+
+      const hero = {
+        x: cssWidth() / 2, y: cssHeight() - 90, w: HERO_W, h: HERO_H, targetX: null,
+        draw() {
+          ctx.save();
+          ctx.translate((this.x - 24), (this.y));
+          const scale = this.w / 960;
+          ctx.scale(scale, scale);
+          ctx.fillStyle = "#34ff7a";
+          ctx.fill(heroShape);
+          ctx.restore();
+        },
+        update(dt) {
+          let vx = 0; if (keys.left) vx -= 1; if (keys.right) vx += 1;
+          if (vx !== 0) { this.x += vx * HERO_SPEED * dt; this.targetX = null; }
+          else if (this.targetX !== null) {
+            const dx = this.targetX - this.x;
+            if (Math.abs(dx) < 1) { if (!isPointerDown) this.targetX = null; this.x = this.targetX; }
+            else {
+              const dir = Math.sign(dx), move = dir * HERO_SPEED * dt;
+              if (Math.abs(move) >= Math.abs(dx)) { this.x = this.targetX; if (!isPointerDown) this.targetX = null; }
+              else this.x += move;
+            }
+          }
+          const half = this.w / 2; this.x = Math.max(half, Math.min(cssWidth() - half, this.x));
+          this.y = cssHeight() - 90;
+        }
+      };
+
+      const bullets = []; function spawnBullet(x, y) {
+        bullets.push({ x, y, r: BULLET_R, vy: -BASE_BULLET_SPEED });
+        playSound(shootingAudio);
+      }
+      const enemies = []; function spawnEnemy() {
+        const x = Math.random() * (cssWidth() - BASE_ENEMY_W) + BASE_ENEMY_W / 2;
+        enemies.push({
+          x,
+          y: -BASE_ENEMY_H,
+          w: BASE_ENEMY_W,
+          h: BASE_ENEMY_H,
+          vy: ENEMY_SPEED,
+          color: VILLAIN_COLORS[level - 1] || '#fff'
+        });
+      }
+
+      let fireAccum = 0, fireInterval = 1 / FIRE_RATE;
+      let enemyAccum = 0, enemyInterval = ENEMY_SPAWN;
+      let score = 0;
+      const scoreEl = document.getElementById('score'), levelEl = document.getElementById('level');
+
+      function resetGame() {
+        bullets.length = 0; enemies.length = 0; score = 0; level = 1;
+        HERO_SPEED = BASE_HERO_SPEED; FIRE_RATE = BASE_FIRE_RATE; ENEMY_SPEED = BASE_ENEMY_SPEED; ENEMY_SPAWN = BASE_ENEMY_SPAWN;
+        scoreEl.textContent = score; levelEl.textContent = level;
+        hero.x = cssWidth() / 2; hero.targetX = null; gameOver = false;
+        document.getElementById('gameOverOverlay').style.visibility = 'hidden';
+      }
+
+      function showGameOver() {
+        document.getElementById('finalScore').textContent = score;
+        document.getElementById('finalLevel').textContent = level;
+        document.getElementById('gameOverOverlay').style.visibility = 'visible';
+        playSound(gameOverAudio);
+      }
+
+      function checkLevel() {
+        for (let i = LEVEL_THRESHOLDS.length - 1; i >= 0; i--) {
+          if (score >= LEVEL_THRESHOLDS[i]) {
+            if (level !== i + 1) { level = i + 1; onLevelUp(); }
+            break;
+          }
+        }
+      }
+
+      function onLevelUp() {
+        HERO_SPEED = BASE_HERO_SPEED * (1 + (level - 1) * 0.1 * (cssWidth() / 800));
+        FIRE_RATE = Math.min(BASE_FIRE_RATE + (level - 1) * 0.5, 8);
+        ENEMY_SPEED = BASE_ENEMY_SPEED + (level - 1) * 40;
+        ENEMY_SPAWN = Math.max(0.5, BASE_ENEMY_SPAWN - (level - 1) * 0.15);
+        fireInterval = 1 / FIRE_RATE;
+        enemyInterval = ENEMY_SPAWN;
+        levelEl.textContent = level;
+      }
+
+      function update(dt) {
+        if (gameOver) return;
+        hero.update(dt);
+
+        fireAccum += dt; while (fireAccum >= fireInterval) { fireAccum -= fireInterval; spawnBullet(hero.x, hero.y - hero.h / 2 - 8); }
+        enemyAccum += dt; while (enemyAccum >= enemyInterval) { enemyAccum -= enemyInterval; spawnEnemy(); }
+
+        for (let i = bullets.length - 1; i >= 0; i--) { bullets[i].y += bullets[i].vy * dt; if (bullets[i].y < -10) bullets.splice(i, 1); }
+        for (let i = enemies.length - 1; i >= 0; i--) { enemies[i].y += enemies[i].vy * dt; if (enemies[i].y > cssHeight() + 40) enemies.splice(i, 1); }
+
+        // bullet-enemy collisions
+        for (let i = enemies.length - 1; i >= 0; i--) {
+          const e = enemies[i];
+          for (let j = bullets.length - 1; j >= 0; j--) {
+            const b = bullets[j];
+            if (b.x > e.x - e.w / 2 && b.x < e.x + e.w / 2 && b.y > e.y - e.h / 2 && b.y < e.y + e.h / 2) {
+              enemies.splice(i, 1); bullets.splice(j, 1); score += 10; scoreEl.textContent = score; checkLevel();
+              playSound(blastAudio);
+              break;
+            }
+          }
+        }
+
+        // enemy-hero collisions
+        for (const e of enemies) {
+          if (Math.abs(e.x - hero.x) < (e.w / 2 + hero.w / 2) && Math.abs(e.y - hero.y) < (e.h / 2 + hero.h / 2)) {
+            gameOver = true; showGameOver();
+          }
+        }
+      }
+
+      function draw() {
+        ctx.clearRect(0, 0, cssWidth(), cssHeight());
+        const g = ctx.createLinearGradient(0, 0, 0, cssHeight()); g.addColorStop(0, '#001219'); g.addColorStop(1, '#000'); ctx.fillStyle = g;
+        ctx.fillRect(0, 0, cssWidth(), cssHeight());
+        ctx.fillStyle = '#fff'; for (let i = 0; i < 60; i++) { const sx = (i * 97) % cssWidth(), sy = (i * 53 + 120) % cssHeight(), sr = ((i * 13) % 3) + 0.5; ctx.fillRect(sx, sy, sr, sr); }
+        hero.draw();
+        ctx.fillStyle = '#ffd166'; for (const b of bullets) { ctx.beginPath(); ctx.arc(b.x, b.y, b.r, 0, Math.PI * 2); ctx.fill(); }
+
+        // draw villain icons
+        for (const e of enemies) {
+          ctx.save();
+          ctx.translate(e.x - 24, e.y);
+          const scale = e.w / 960;
+          ctx.scale(scale, scale);
+          ctx.fillStyle = e.color;
+          ctx.fill(enemyShape);
+          ctx.restore();
+        }
+      }
+
+      let last = performance.now();
+      function loop(now) {
+        const dt = Math.min((now - last) / 1000, 0.05);
+        last = now;
+        update(dt);
+        draw();
+        requestAnimationFrame(loop);
+      }
+
+      // input handlers
+      window.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') keys.left = true;
+        if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') keys.right = true;
+        if (gameOver && (e.key === 'Enter' || e.key === ' ')) resetGame();
+      });
+      window.addEventListener('keyup', (e) => {
+        if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') keys.left = false;
+        if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') keys.right = false;
+      });
+
+      function getCanvasPos(e) {
+        const r = canvas.getBoundingClientRect();
+        const t = e.touches ? e.touches[0] : e;
+        return { x: t.clientX - r.left, y: t.clientY - r.top };
+      }
+
+      function resumeGame() {
+        console.log("Resuming game after rewarded ad...");
+        gameOver = false; // remove game over state
+        enemies.length = 0;
+        document.getElementById('gameOverOverlay').style.visibility = 'hidden';
+        requestAnimationFrame(loop);
+      }
+
+      const controlsEl = document.getElementById('controls');
+      function showControls() { controlsEl.style.display = window.innerWidth < 900 ? 'flex' : 'none'; }
+      showControls(); window.addEventListener('resize', showControls);
+      document.getElementById('btn-left').addEventListener('touchstart', e => { e.preventDefault(); keys.left = true; }, { passive: false });
+      document.getElementById('btn-left').addEventListener('touchend', e => { e.preventDefault(); keys.left = false; }, { passive: false });
+      document.getElementById('btn-right').addEventListener('touchstart', e => { e.preventDefault(); keys.right = true; }, { passive: false });
+      document.getElementById('btn-right').addEventListener('touchend', e => { e.preventDefault(); keys.right = false; }, { passive: false });
+      document.getElementById('restartBtn').addEventListener('click', resetGame);
+
+      const resumeBtn = document.getElementById('resumeBtn');
+      resumeBtn.addEventListener('click', () => {
+        console.log("Reward video button clicked!");
+
+        // Call Android interface to show rewarded ad
+        if (window.Android && window.Android.showRewardedAd) {
+          window.Android.showRewardedAd();
+        } else {
+          console.warn("Android interface not available, running fallback.");
+          resumeGame(); // fallback for web testing
+        }
+      });
+
+      const startOverlay = document.getElementById('startOverlay');
+      const startBtn = document.getElementById('startBtn');
+
+      startBtn.addEventListener('click', () => {
+        startOverlay.style.visibility = 'hidden';
+        requestAnimationFrame(loop);
+      });
+
+      const muteBtn = document.getElementById('muteBtn');
+      muteBtn.addEventListener('click', () => {
+        isMuted = !isMuted;
+        muteBtn.textContent = isMuted ? '🔇' : '🔊';
+      });
+
+    })();
+  </script>
+</body>
+
+</html>
