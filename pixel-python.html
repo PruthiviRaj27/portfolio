@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pixel Python</title>
+
+    <!-- Standard favicon -->
+    <link rel="shortcut icon" href="assets/pixel_python/favicon.ico" type="image/x-icon">
+
+    <!-- PNG favicons for modern browsers -->
+    <link rel="icon" type="image/png" sizes="16x16" href="assets/pixel_python/favicon-16x16.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/pixel_python/favicon-32x32.png">
+
+    <!-- Android / Chrome icons -->
+    <link rel="icon" type="image/png" sizes="192x192" href="assets/pixel_python/android-chrome-192x192.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="assets/pixel_python/android-chrome-512x512.png">
+
+    <!-- Apple Touch Icon (iOS home screen) -->
+    <link rel="apple-touch-icon" sizes="180x180" href="assets/pixel_python/apple-touch-icon.png">
+
+    <!-- Web App Manifest (PWA) -->
+    <link rel="manifest" href="assets/pixel_python/site.webmanifest">
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+        body {
+            font-family: 'Press Start 2P', cursive;
+            background-color: #121212;
+            color: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .game-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            background-color: #1e1e1e;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            max-width: 90%;
+            max-height: 90vh;
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            text-align: center;
+            margin-bottom: 20px;
+            color: #e0e0e0;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+        }
+
+        canvas {
+            background-color: #333333;
+            border: 4px solid #555555;
+            border-radius: 8px;
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
+            touch-action: none;
+            /* Disable default touch actions */
+            max-width: 100%;
+            flex-shrink: 1;
+        }
+
+        .score-board {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            margin-top: 15px;
+            font-size: 1rem;
+            padding: 0 10px;
+        }
+
+        .score-board span {
+            padding: 8px 12px;
+            background-color: #444444;
+            border-radius: 6px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+        }
+
+        .controls {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 20px;
+            width: 100%;
+        }
+
+        .d-pad {
+            display: grid;
+            grid-template-areas:
+                ". up ."
+                "left . right"
+                ". down .";
+            gap: 5px;
+        }
+
+        .control-btn {
+            background-color: #6a0dad;
+            color: #ffffff;
+            border: 2px solid #9932cc;
+            border-radius: 8px;
+            font-size: 1.5rem;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: transform 0.1s, background-color 0.1s;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+            user-select: none;
+        }
+
+        .control-btn:active {
+            transform: translateY(2px);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+        }
+
+        .control-up {
+            grid-area: up;
+        }
+
+        .control-left {
+            grid-area: left;
+        }
+
+        .control-right {
+            grid-area: right;
+        }
+
+        .control-down {
+            grid-area: down;
+        }
+
+        .game-message {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(30, 30, 30, 0.9);
+            color: #ffffff;
+            padding: 20px 40px;
+            border-radius: 10px;
+            text-align: center;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            z-index: 10;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.7);
+        }
+
+        .game-message h2 {
+            font-size: 2rem;
+            margin: 0 0 10px 0;
+            color: #ff4d4d;
+        }
+
+        .game-message p {
+            margin: 0 0 20px 0;
+            font-size: 1.2rem;
+        }
+
+        .restart-btn,
+        .resume-btn {
+            background-color: #28a745;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-family: 'Press Start 2P', cursive;
+            transition: background-color 0.2s;
+            margin: 5px;
+        }
+
+        .resume-btn {
+            background-color: #6a0dad;
+        }
+
+        .restart-btn:hover {
+            background-color: #218838;
+        }
+
+        .resume-btn:hover {
+            background-color: #9932cc;
+        }
+
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 1.5rem;
+            }
+
+            .score-board {
+                flex-direction: column;
+                align-items: center;
+                gap: 10px;
+            }
+
+            .control-btn {
+                width: 50px;
+                height: 50px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="game-container">
+        <h1>Pixel Python</h1>
+        <canvas id="gameCanvas"></canvas>
+        <div class="score-board">
+            <span>Score: <span id="score">0</span></span>
+            <span>High Score: <span id="high-score">0</span></span>
+        </div>
+        <div class="controls">
+            <div class="d-pad">
+                <button class="control-btn control-up" data-direction="Up">▲</button>
+                <button class="control-btn control-left" data-direction="Left">◀</button>
+                <button class="control-btn control-right" data-direction="Right">▶</button>
+                <button class="control-btn control-down" data-direction="Down">▼</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="game-message" class="game-message">
+        <h2 id="message-text">Game Over</h2>
+        <p>Your score: <span id="final-score">0</span></p>
+        <button id="resume-btn" class="resume-btn">Resume with Reward</button>
+        <button id="restart-btn" class="restart-btn">Restart</button>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        const scoreElement = document.getElementById('score');
+        const highScoreElement = document.getElementById('high-score');
+        const gameMessage = document.getElementById('game-message');
+        const messageText = document.getElementById('message-text');
+        const finalScoreElement = document.getElementById('final-score');
+        const restartBtn = document.getElementById('restart-btn');
+        const resumeBtn = document.getElementById('resume-btn');
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const enableRewards = urlParams.get('enable_rewards') === 'true';
+
+        const initialTileCount = 20;
+        let gridSize;
+        let tileCount;
+        let snake = [];
+        let food = {};
+        let dx = 0;
+        let dy = 0;
+        let score = 0;
+        let highScore = localStorage.getItem('snakeHighScore') || 0;
+        let isGameOver = false;
+        let gameLoopInterval;
+        const gameSpeed = 100;
+
+        function updateCanvasSize() {
+            const container = document.querySelector('.game-container');
+            const availableHeight = container.clientHeight - 150; // Subtract space for score and controls
+            const availableWidth = container.clientWidth - 40; // Subtract padding
+
+            const size = Math.min(availableWidth, availableHeight, 400);
+            canvas.width = size;
+            canvas.height = size;
+            gridSize = canvas.width / initialTileCount;
+            tileCount = initialTileCount;
+        }
+
+        function init() {
+            updateCanvasSize();
+            snake = [{ x: Math.floor(tileCount / 2), y: Math.floor(tileCount / 2) }];
+            dx = 0;
+            dy = 0;
+            score = 0;
+            isGameOver = false;
+            highScoreElement.textContent = highScore;
+            updateScore();
+            gameMessage.style.display = 'none';
+
+            generateFood();
+            if (gameLoopInterval) clearInterval(gameLoopInterval);
+            gameLoopInterval = setInterval(gameLoop, gameSpeed);
+        }
+
+        function gameLoop() {
+            if (isGameOver) {
+                clearInterval(gameLoopInterval);
+                showGameOver();
+                return;
+            }
+
+            update();
+            draw();
+        }
+
+        function update() {
+            const head = { x: snake[0].x + dx, y: snake[0].y + dy };
+
+            // Wrap around logic
+            if (head.x < 0) head.x = tileCount - 1;
+            if (head.x >= tileCount) head.x = 0;
+            if (head.y < 0) head.y = tileCount - 1;
+            if (head.y >= tileCount) head.y = 0;
+
+            // Check for self-collision
+            if (checkCollision(head)) {
+                isGameOver = true;
+                return;
+            }
+
+            snake.unshift(head);
+
+            // Check for food collision
+            if (head.x === food.x && head.y === food.y) {
+                score++;
+                updateScore();
+                generateFood();
+            } else {
+                snake.pop();
+            }
+        }
+
+        function draw() {
+            ctx.fillStyle = '#333333';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Draw snake
+            ctx.fillStyle = '#4CAF50';
+            snake.forEach(segment => {
+                ctx.fillRect(segment.x * gridSize, segment.y * gridSize, gridSize - 2, gridSize - 2);
+            });
+
+            // Draw food
+            ctx.fillStyle = '#FF5733';
+            ctx.beginPath();
+            ctx.arc(food.x * gridSize + gridSize / 2, food.y * gridSize + gridSize / 2, gridSize / 2 * 0.8, 0, 2 * Math.PI);
+            ctx.fill();
+        }
+
+        function generateFood() {
+            food = {
+                x: Math.floor(Math.random() * tileCount),
+                y: Math.floor(Math.random() * tileCount)
+            };
+            // Ensure food doesn't spawn on the snake
+            snake.forEach(segment => {
+                if (segment.x === food.x && segment.y === food.y) {
+                    generateFood();
+                }
+            });
+        }
+
+        function checkCollision(head) {
+            for (let i = 1; i < snake.length; i++) {
+                if (head.x === snake[i].x && head.y === snake[i].y) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        function updateScore() {
+            scoreElement.textContent = score;
+            if (score > highScore) {
+                highScore = score;
+                highScoreElement.textContent = highScore;
+                localStorage.setItem('snakeHighScore', highScore);
+            }
+        }
+
+        function showGameOver() {
+            finalScoreElement.textContent = score;
+            gameMessage.style.display = 'flex';
+            messageText.textContent = 'Game Over!';
+            // Hide resume button if rewards are disabled or score is too low
+            if (enableRewards && snake.length <= 5) {
+                resumeBtn.style.display = 'inline-block';
+            } else {
+                resumeBtn.style.display = 'none';
+            }
+        }
+
+        restartBtn.addEventListener('click', () => {
+            init();
+        });
+
+        // Event listener for the new resume button
+        resumeBtn.addEventListener('click', () => {
+            console.log("Reward video button clicked!");
+            if (window.Android && window.Android.showRewardedAd) {
+                window.Android.showRewardedAd();
+            } else {
+                console.warn("Android interface not available, running fallback.");
+                window.resumeGame(); // fallback for web testing
+            }
+        });
+
+        // Global function to be called by the native app or fallback
+        window.resumeGame = function () {
+            console.log("Resuming game after rewarded ad...");
+            isGameOver = false;
+            gameMessage.style.display = 'none';
+            // Remove the first few segments to give a "second chance" feeling
+            // This is a design choice to make the "reward" impactful
+            snake.splice(1, 3);
+            if (gameLoopInterval) clearInterval(gameLoopInterval);
+            gameLoopInterval = setInterval(gameLoop, gameSpeed);
+        };
+
+        // Keyboard controls
+        window.addEventListener('keydown', e => {
+            switch (e.key) {
+                case 'ArrowUp':
+                    if (dy !== 1) { dx = 0; dy = -1; }
+                    break;
+                case 'ArrowDown':
+                    if (dy !== -1) { dx = 0; dy = 1; }
+                    break;
+                case 'ArrowLeft':
+                    if (dx !== 1) { dx = -1; dy = 0; }
+                    break;
+                case 'ArrowRight':
+                    if (dx !== -1) { dx = 1; dy = 0; }
+                    break;
+            }
+        });
+
+        // Touch controls for mobile
+        document.querySelectorAll('.control-btn').forEach(button => {
+            button.addEventListener('touchstart', e => {
+                e.preventDefault();
+                const direction = e.target.dataset.direction;
+                setDirection(direction);
+            });
+            button.addEventListener('mousedown', e => {
+                e.preventDefault();
+                const direction = e.target.dataset.direction;
+                setDirection(direction);
+            });
+        });
+
+        function setDirection(direction) {
+            switch (direction) {
+                case 'Up':
+                    if (dy !== 1) { dx = 0; dy = -1; }
+                    break;
+                case 'Down':
+                    if (dy !== -1) { dx = 0; dy = 1; }
+                    break;
+                case 'Left':
+                    if (dx !== 1) { dx = -1; dy = 0; }
+                    break;
+                case 'Right':
+                    if (dx !== -1) { dx = 1; dy = 0; }
+                    break;
+            }
+        }
+
+        window.onload = init;
+        window.addEventListener('resize', init);
+    </script>
+
+</body>
+
+</html>
