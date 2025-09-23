@@ -386,7 +386,7 @@
             gameMessage.style.display = 'flex';
             messageText.textContent = 'Game Over!';
             // Hide resume button if rewards are disabled or score is too low
-            if (enableRewards && snake.length <= 5) {
+            if (enableRewards && snake.length >= 5) {
                 resumeBtn.style.display = 'inline-block';
             } else {
                 resumeBtn.style.display = 'none';
