@@ -409,7 +409,7 @@
             gameMessage.style.display = 'none';
             // Remove the first few segments to give a "second chance" feeling
             // This is a design choice to make the "reward" impactful
-            snake.splice(1, 3);
+            snake = [{ x: 0, y: 0 }];
             if (gameLoopInterval) clearInterval(gameLoopInterval);
             gameLoopInterval = setInterval(gameLoop, gameSpeed);
         };
