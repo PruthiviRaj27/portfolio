@@ -37,6 +37,7 @@
             margin: 0;
             padding: 20px;
             box-sizing: border-box;
+            overflow: auto;
         }
 
         .game-container {
@@ -47,8 +48,11 @@
             background-color: #1e1e1e;
             border-radius: 12px;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
-            max-width: 90%;
-            max-height: 90vh;
+            min-width: 320px;
+            min-height: 520px;
+            height: auto;
+            box-sizing: border-box;
+            overflow: visible;
         }
 
         h1 {
@@ -77,13 +81,6 @@
             margin-top: 15px;
             font-size: 1rem;
             padding: 0 10px;
-        }
-
-        .score-board span {
-            padding: 8px 12px;
-            background-color: #444444;
-            border-radius: 6px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
         }
 
         .controls {
