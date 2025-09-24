@@ -6,10 +6,6 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
   <title>Android Wars</title>
 
-  <!-- Material Symbols for hero and villain -->
-  <link rel="stylesheet"
-    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=adb,android" />
-
   <!-- Standard favicon -->
   <link rel="shortcut icon" href="assets/android_wars/favicon.ico" type="image/x-icon">
 
@@ -308,11 +304,24 @@
         }
       };
 
-      const bullets = []; function spawnBullet(x, y) {
+      const bullets = []; 
+      const enemies = []; 
+      let fireAccum = 0, fireInterval = 1 / FIRE_RATE;
+      let enemyAccum = 0, enemyInterval = ENEMY_SPAWN;
+      let score = 0;
+      const scoreEl = document.getElementById('score'), levelEl = document.getElementById('level');
+
+      // --- Performance: Limit bullets and enemies ---
+      const MAX_BULLETS = 40;
+      const MAX_ENEMIES = 30;
+
+      function spawnBullet(x, y) {
+        if (bullets.length >= MAX_BULLETS) bullets.shift();
         bullets.push({ x, y, r: BULLET_R, vy: -BASE_BULLET_SPEED });
         playSound(shootingAudio);
       }
-      const enemies = []; function spawnEnemy() {
+      function spawnEnemy() {
+        if (enemies.length >= MAX_ENEMIES) enemies.shift();
         const x = Math.random() * (cssWidth() - BASE_ENEMY_W) + BASE_ENEMY_W / 2;
         enemies.push({
           x,
@@ -324,24 +333,29 @@
         });
       }
 
-      let fireAccum = 0, fireInterval = 1 / FIRE_RATE;
-      let enemyAccum = 0, enemyInterval = ENEMY_SPAWN;
-      let score = 0;
-      const scoreEl = document.getElementById('score'), levelEl = document.getElementById('level');
-
       function resetGame() {
         bullets.length = 0; enemies.length = 0; score = 0; level = 1;
         HERO_SPEED = BASE_HERO_SPEED; FIRE_RATE = BASE_FIRE_RATE; ENEMY_SPEED = BASE_ENEMY_SPEED; ENEMY_SPAWN = BASE_ENEMY_SPAWN;
         scoreEl.textContent = score; levelEl.textContent = level;
         hero.x = cssWidth() / 2; hero.targetX = null; gameOver = false;
         document.getElementById('gameOverOverlay').style.visibility = 'hidden';
+        startGameLoop();
       }
+
+      window.resumeGame = function() {
+        console.log("Resuming game after rewarded ad...");
+        gameOver = false;
+        enemies.length = 0;
+        document.getElementById('gameOverOverlay').style.visibility = 'hidden';
+        startGameLoop();
+      };
 
       function showGameOver() {
         document.getElementById('finalScore').textContent = score;
         document.getElementById('finalLevel').textContent = level;
         document.getElementById('gameOverOverlay').style.visibility = 'visible';
         playSound(gameOverAudio);
+        stopGameLoop();
       }
 
       function checkLevel() {
@@ -415,12 +429,29 @@
       }
 
       let last = performance.now();
+      let loopRunning = false; // Add this flag
+
       function loop(now) {
+        if (!loopRunning) return; // Only run if loopRunning is true
         const dt = Math.min((now - last) / 1000, 0.05);
         last = now;
         update(dt);
         draw();
         requestAnimationFrame(loop);
+      }
+
+      // Start the loop only if not already running
+      function startGameLoop() {
+        if (!loopRunning) {
+          loopRunning = true;
+          last = performance.now();
+          requestAnimationFrame(loop);
+        }
+      }
+
+      // Stop the loop
+      function stopGameLoop() {
+        loopRunning = false;
       }
 
       // input handlers
@@ -445,7 +476,7 @@
           gameOver = false;
           enemies.length = 0;
           document.getElementById('gameOverOverlay').style.visibility = 'hidden';
-          requestAnimationFrame(loop);
+          startGameLoop();
       };
 
       const controlsEl = document.getElementById('controls');
@@ -475,7 +506,7 @@
 
       startBtn.addEventListener('click', () => {
         startOverlay.style.visibility = 'hidden';
-        requestAnimationFrame(loop);
+        startGameLoop();
       });
 
       const muteBtn = document.getElementById('muteBtn');
