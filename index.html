@@ -4,27 +4,34 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Pruthivi Raj | Android Developer</title>
+  <title>Pruthivi Raj M | Android Architect [Console]</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;500;700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
 
-  <!-- Standard favicon -->
+  <!-- Favicons -->
   <link rel="shortcut icon" href="assets/portfolio/favicon.ico" type="image/x-icon">
-
-  <!-- PNG favicons for modern browsers -->
   <link rel="icon" type="image/png" sizes="16x16" href="assets/portfolio/favicon-16x16.png">
   <link rel="icon" type="image/png" sizes="32x32" href="assets/portfolio/favicon-32x32.png">
-
-  <!-- Android / Chrome icons -->
   <link rel="icon" type="image/png" sizes="192x192" href="assets/portfolio/android-chrome-192x192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="assets/portfolio/android-chrome-512x512.png">
-
-  <!-- Apple Touch Icon (iOS home screen) -->
   <link rel="apple-touch-icon" sizes="180x180" href="assets/portfolio/apple-touch-icon.png">
-
-  <!-- Web App Manifest (PWA) -->
   <link rel="manifest" href="assets/portfolio/site.webmanifest">
 
   <style>
+    :root {
+      --m3-bg: #1C1B1F;
+      --m3-surface: #25232A;
+      --m3-surface-bright: #312E37;
+      --m3-primary: #3DDC84; /* Android Green */
+      --m3-on-primary: #00391C;
+      --m3-secondary: #D0BCFF;
+      --m3-outline: #938F99;
+      --m3-text: #E6E1E5;
+      --m3-text-dim: #CAC4D0;
+      --font-mono: 'Roboto Mono', monospace;
+      --font-sans: 'Roboto', sans-serif;
+    }
+
     * {
       margin: 0;
       padding: 0;
@@ -32,449 +39,562 @@
     }
 
     body {
-      font-family: 'Segoe UI', sans-serif;
-      background: #0f0f0f;
-      color: #fff;
+      font-family: var(--font-sans);
+      background: var(--m3-bg);
+      color: var(--m3-text);
       overflow-x: hidden;
       scroll-behavior: smooth;
+      display: flex;
     }
 
-    /* Particle background */
-    #particles {
+    /* Side Navigation Rail (Desktop) */
+    .nav-rail {
       position: fixed;
-      width: 100%;
-      height: 100%;
-      top: 0;
       left: 0;
-      z-index: -1;
-      background: radial-gradient(circle at top, #1a1a1a, #000);
+      top: 0;
+      bottom: 0;
+      width: 80px;
+      background: var(--m3-surface);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 24px 0;
+      z-index: 2000;
+      border-right: 1px solid var(--m3-outline);
     }
 
-    header {
-      text-align: center;
-      padding: 80px 15px 60px;
-      position: relative;
-    }
-
-    header h1 {
-      font-size: clamp(2rem, 5vw, 3em);
-      background: linear-gradient(90deg, #00d4ff, #00ff88);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-
-    header p {
-      font-size: clamp(1rem, 2.5vw, 1.2em);
-      opacity: 0.85;
-      margin-top: 10px;
-    }
-
-    .android-icon {
-      font-size: clamp(3rem, 8vw, 4em);
-      color: #00ff88;
-      margin-bottom: 15px;
-      text-shadow: 0 0 20px #00ff88;
-      animation: float 3s ease-in-out infinite;
-    }
-
-    nav {
-      margin-top: 25px;
+    .nav-rail .brand {
+      width: 48px;
+      height: 48px;
+      background: var(--m3-primary);
+      border-radius: 12px;
       display: flex;
       justify-content: center;
-      flex-wrap: wrap;
-      gap: 12px;
+      align-items: center;
+      color: var(--m3-on-primary);
+      font-size: 1.5rem;
+      margin-bottom: 48px;
     }
 
-    nav a {
+    .nav-rail a {
       text-decoration: none;
-      font-weight: bold;
-      padding: 8px 16px;
-      border-radius: 25px;
-      background: rgba(255, 255, 255, 0.08);
-      color: #00d4ff;
-      backdrop-filter: blur(8px);
-      transition: 0.3s;
-      font-size: 0.95rem;
-    }
-
-    nav a:hover {
-      background: #00d4ff;
-      color: #000;
-      box-shadow: 0 0 15px #00d4ff;
-    }
-
-    /* Hamburger button */
-    .nav-toggle {
-      display: none;
-      background: none;
-      border: none;
-      color: #00d4ff;
-      font-size: 1.8em;
-      cursor: pointer;
-      position: absolute;
-      right: 20px;
-      top: 20px;
-    }
-
-    /* Responsive nav */
-    @media (max-width: 768px) {
-      nav {
-        display: none;
-        flex-direction: column;
-        align-items: center;
-        gap: 15px;
-        margin-top: 20px;
-      }
-
-      nav.show {
-        display: flex;
-      }
-
-      .nav-toggle {
-        display: block;
-      }
-    }
-
-    section {
-      max-width: 1100px;
-      margin: 60px auto;
-      padding: 25px;
-      border-radius: 20px;
-      background: rgba(255, 255, 255, 0.05);
-      backdrop-filter: blur(20px);
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
-      opacity: 0;
-      transform: translateY(60px);
-      transition: all 0.8s ease-out;
-    }
-
-    section.visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    h2 {
-      font-size: clamp(1.5rem, 4vw, 2em);
-      margin-bottom: 20px;
-      color: #00d4ff;
-      text-shadow: 0 0 10px #00d4ff;
-      text-align: center;
-    }
-
-    .card-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 20px;
-    }
-
-    .card {
-      border-radius: 20px;
-      background: rgba(0, 0, 0, 0.6);
-      text-align: center;
-      padding: 20px;
+      color: var(--m3-text-dim);
+      width: 56px;
+      height: 56px;
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      border: 2px solid rgba(0, 212, 255, 0.6);
-      box-shadow: 0 0 12px rgba(0, 212, 255, 0.4);
-      transition: transform 0.4s, box-shadow 0.4s;
+      border-radius: 16px;
+      margin-bottom: 12px;
+      transition: all 0.2s;
+      font-size: 1.2rem;
     }
 
-    .card:hover {
-      transform: translateY(-6px) scale(1.03);
-      box-shadow: 0 0 25px rgba(0, 255, 200, 0.7);
+    .nav-rail a:hover, .nav-rail a.active {
+      color: var(--m3-primary);
+      background: var(--m3-surface-bright);
     }
 
-    .card i {
-      font-size: 2em;
-      margin-bottom: 10px;
-      color: #00ff88;
-      text-shadow: 0 0 15px #00ff88;
+    .nav-rail a.active {
+      background: rgba(61, 220, 132, 0.1);
     }
 
-    .card p {
-      font-size: 0.95rem;
+    /* Bottom Nav (Mobile) */
+    .bottom-nav {
+      display: none;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 80px;
+      background: var(--m3-surface);
+      z-index: 2000;
+      justify-content: space-around;
+      align-items: center;
+      padding: 0 16px;
+      border-top: 1px solid var(--m3-outline);
     }
 
+    .bottom-nav a {
+      text-decoration: none;
+      color: var(--m3-text-dim);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      font-size: 1.2rem;
+      gap: 4px;
+    }
+
+    .bottom-nav a.active { color: var(--m3-primary); }
+
+    /* Main Content Wrapper */
+    main {
+      margin-left: 80px;
+      width: calc(100% - 80px);
+      min-height: 100vh;
+      padding-top: 32px;
+    }
+
+    /* Decorative System Bar */
+    .system-status {
+      position: fixed;
+      top: 0;
+      right: 0;
+      width: calc(100% - 80px);
+      height: 32px;
+      background: rgba(28, 27, 31, 0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      padding: 0 24px;
+      gap: 12px;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--m3-text-dim);
+      z-index: 3000;
+    }
+
+    .system-status i { font-size: 0.85rem; }
+
+    /* Hero Section */
+    header {
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 0 8vw;
+      background: radial-gradient(circle at 80% 20%, rgba(61, 220, 132, 0.05) 0%, transparent 50%);
+    }
+
+    .device-info {
+      font-family: var(--font-mono);
+      color: var(--m3-primary);
+      margin-bottom: 16px;
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .device-info .dot { width: 8px; height: 8px; background: var(--m3-primary); border-radius: 50%; box-shadow: 0 0 10px var(--m3-primary); }
+
+    header h1 {
+      font-family: var(--font-sans);
+      font-size: clamp(3rem, 10vw, 6rem);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      line-height: 1;
+      margin-bottom: 16px;
+    }
+
+    .sub-title {
+      font-family: var(--font-mono);
+      font-size: clamp(1rem, 2.5vw, 1.5rem);
+      color: var(--m3-text-dim);
+      margin-bottom: 48px;
+    }
+
+    .fab-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      background: var(--m3-primary);
+      color: var(--m3-on-primary);
+      padding: 16px 32px;
+      border-radius: 20px;
+      text-decoration: none;
+      font-weight: 700;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+      transition: all 0.3s;
+      width: fit-content;
+    }
+
+    .fab-btn:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 32px rgba(61, 220, 132, 0.3);
+    }
+
+    /* Section Components */
+    section {
+      max-width: 1100px;
+      margin: 80px auto;
+      padding: 0 24px;
+    }
+
+    .m3-card {
+      background: var(--m3-surface);
+      border-radius: 28px;
+      padding: 40px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      margin-bottom: 24px;
+      transition: all 0.3s;
+    }
+
+    .m3-card:hover {
+      background: var(--m3-surface-bright);
+      border-color: rgba(61, 220, 132, 0.2);
+    }
+
+    h2 {
+      font-size: 2rem;
+      font-weight: 500;
+      margin-bottom: 32px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    h2 i { color: var(--m3-primary); }
+
+    /* Bento Grid for Skills */
+    .bento {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+
+    .bento-item {
+      padding: 24px;
+      border-radius: 24px;
+      background: var(--m3-surface-bright);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .bento-item h3 { font-size: 1.1rem; color: var(--m3-primary); font-family: var(--font-mono); }
+    .bento-item p { font-size: 0.9rem; color: var(--m3-text-dim); }
+
+    .chip-container { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+    .chip {
+      padding: 6px 14px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--m3-outline);
+      border-radius: 8px;
+      font-size: 0.75rem;
+      font-family: var(--font-mono);
+      color: var(--m3-text-dim);
+    }
+
+    /* List Items */
+    .list-item {
+      display: flex;
+      gap: 24px;
+      padding: 24px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .list-item:last-child { border-bottom: none; }
+
+    .item-meta { min-width: 180px; font-family: var(--font-mono); color: var(--m3-primary); font-size: 0.85rem; font-weight: 700; }
+    .item-content h3 { margin-bottom: 8px; font-size: 1.25rem; font-weight: 500; }
+    .item-content p { color: var(--m3-text-dim); font-size: 0.95rem; line-height: 1.6; }
+    .item-content ul { list-style: none; margin-top: 12px; }
+    .item-content li { margin-bottom: 8px; padding-left: 16px; position: relative; color: var(--m3-text-dim); font-size: 0.9rem; }
+    .item-content li::before { content: "•"; position: absolute; left: 0; color: var(--m3-primary); }
+
+    /* Certifications Chips */
+    .cert-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 24px;
+      background: var(--m3-surface-bright);
+      border-radius: 16px;
+      margin-bottom: 12px;
+      text-decoration: none;
+      color: inherit;
+      transition: 0.2s;
+    }
+
+    .cert-row:hover { background: rgba(61, 220, 132, 0.1); transform: scale(1.01); }
+    .cert-row h3 { font-size: 1rem; font-weight: 500; }
+    .cert-row i { color: var(--m3-primary); }
+
+    /* Footer */
     footer {
+      padding: 100px 24px 140px;
       text-align: center;
-      padding: 25px 10px;
-      font-size: 0.9em;
-      opacity: 0.7;
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
     }
 
-    @keyframes float {
+    .social-row { display: flex; justify-content: center; gap: 32px; margin-bottom: 40px; }
+    .social-row a { font-size: 1.8rem; color: var(--m3-text-dim); transition: 0.3s; }
+    .social-row a:hover { color: var(--m3-primary); transform: translateY(-4px); }
 
-      0%,
-      100% {
-        transform: translateY(0);
-      }
+    .sys-msg { font-family: var(--font-mono); font-size: 0.8rem; color: var(--m3-outline); }
 
-      50% {
-        transform: translateY(-12px);
-      }
-    }
+    /* Animations */
+    @keyframes pulse { 50% { opacity: 0.5; } }
 
-    /* Responsive spacing */
-    @media (max-width: 500px) {
-      section {
-        margin: 40px 15px;
-        padding: 20px;
-      }
-
-      .card {
-        padding: 15px;
-      }
+    /* Mobile Responsive */
+    @media (max-width: 900px) {
+      .nav-rail { display: none; }
+      .bottom-nav { display: flex; }
+      main { margin-left: 0; width: 100%; }
+      .system-status { width: 100%; }
+      .bento { grid-template-columns: 1fr; }
+      .list-item { flex-direction: column; gap: 8px; }
+      .item-meta { min-width: auto; }
+      header { padding: 0 24px; }
+      header h1 { font-size: 3.5rem; }
     }
   </style>
 </head>
 
 <body>
-  <canvas id="particles"></canvas>
+  <!-- System Nav Rail -->
+  <nav class="nav-rail" id="desktopNav">
+    <div class="brand"><i class="fab fa-android"></i></div>
+    <a href="#home" title="System Info"><i class="fas fa-terminal"></i></a>
+    <a href="#about" title="Architect Profile"><i class="fas fa-id-card"></i></a>
+    <a href="#skills" title="Technical Arsenal"><i class="fas fa-microchip"></i></a>
+    <a href="#experience" title="Work Log"><i class="fas fa-history"></i></a>
+    <a href="#projects" title="Impact Trace"><i class="fas fa-rocket"></i></a>
+    <a href="#certifications" title="Verified Build"><i class="fas fa-certificate"></i></a>
+  </nav>
 
-  <!-- Header -->
-  <header>
-    <div class="android-icon"><i class="fab fa-android"></i></div>
-    <h1>Hi, I'm Pruthivi Raj</h1>
-    <p>Android Developer | Kotlin | Java</p>
+  <!-- Mobile Bottom Nav -->
+  <nav class="bottom-nav">
+    <a href="#home" class="active"><i class="fas fa-terminal"></i></a>
+    <a href="#about"><i class="fas fa-id-card"></i></a>
+    <a href="#skills"><i class="fas fa-microchip"></i></a>
+    <a href="#experience"><i class="fas fa-history"></i></a>
+    <a href="#projects"><i class="fas fa-rocket"></i></a>
+  </nav>
 
-    <!-- Mobile toggle -->
-    <button class="nav-toggle" id="navToggle">
-      <i class="fas fa-bars"></i>
-    </button>
+  <!-- System Bar -->
+  <div class="system-status">
+    <span>LTE+</span>
+    <i class="fas fa-wifi"></i>
+    <i class="fas fa-battery-full"></i>
+    <span id="time">12:00</span>
+  </div>
 
-    <nav id="navbar">
-      <a href="#about">About</a>
-      <a href="#experience">Experience</a>
-      <a href="#projects">Projects</a>
-      <a href="#skills">Skills</a>
-      <a href="#products">Products</a>
-      <a href="#contact">Contact</a>
-    </nav>
-  </header>
+  <main>
+    <!-- Hero / System Info -->
+    <header id="home">
+      <div class="device-info">
+        <span class="dot"></span>
+        MODEL: PR_ARCH_OS_v2026 // STATUS: ASSOCIATE CONSULTANT @ INFOSYS
+      </div>
+      <h1>PRUTHIVI RAJ M</h1>
+      <div class="sub-title">Android Developer | Jetpack Compose | MVVM</div>
+      <a href="assets/pruthivi_raj_resume.pdf" target="_blank" class="fab-btn">
+        <i class="fas fa-file-download"></i> EXPORT RESUME.PDF
+      </a>
+    </header>
 
-  <!-- About -->
-  <section id="about">
-    <h2>About Me</h2>
-    <p>I’m an Android Developer with 3 years of experience in designing and building scalable mobile applications.
-      Skilled in Kotlin, Java, Jetpack libraries, and modern Android architectures, with a strong focus on clean code,
-      performance, and great user experience.</p>
-  </section>
-
-  <!-- Experience -->
-  <section id="experience">
-    <h2>Work Experience</h2>
-    <div class="card-grid">
-      <div class="card">
-        <i class="fas fa-briefcase"></i>
-        <h3>Testpress</h3>
-        <p>Android Developer (Jul 2022 – Present)<br>
-          • Developed and maintained LMS Android app.<br>
-          • Built Video Hosting SDK with DRM & Offline support.<br>
-          • Integrated REST APIs, FCM push notifications, custom views, and deep links.<br>
-          • Automated releases using GitHub Actions & Fastlane.</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- Professional Projects -->
-  <section id="projects">
-    <h2>Projects</h2>
-    <div class="card-grid">
-      <div class="card">
-        <i class="fas fa-play-circle"></i>
-        <h3>Tpstreams Player SDK</h3>
-        <p>Advanced Android video SDK built on ExoPlayer with Widevine DRM, AES Encryption, HLS/DASH/RTMP, and offline
-          playback.</p>
-      </div>
-      <div class="card">
-        <i class="fas fa-graduation-cap"></i>
-        <h3>Testpress LMS App</h3>
-        <p>Learning Management System app with store, payments, video courses, analytics, and notifications.</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- Skills -->
-  <section id="skills">
-    <h2>Skills</h2>
-    <div class="card-grid">
-      <div class="card"><i class="fas fa-code"></i>
-        <p>Kotlin, Java</p>
-      </div>
-      <div class="card"><i class="fas fa-layer-group"></i>
-        <p>MVVM, Clean Architecture, Repository Pattern</p>
-      </div>
-      <div class="card"><i class="fas fa-mobile-alt"></i>
-        <p>Jetpack Compose, Android Jetpack Libraries</p>
-      </div>
-      <div class="card"><i class="fas fa-network-wired"></i>
-        <p>Retrofit, OkHttp, REST APIs</p>
-      </div>
-      <div class="card"><i class="fas fa-play"></i>
-        <p>ExoPlayer, DRM (Widevine), AES Encryption</p>
-      </div>
-      <div class="card"><i class="fas fa-tools"></i>
-        <p>Gradle, GitHub, Firebase, Fastlane, Play Console</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- Personal Products -->
-  <section id="products">
-    <h2>Products</h2>
-    <div class="card-grid">
-      <div class="card">
-        <i class="fas fa-calculator"></i>
-        <h3>DCA Calculator</h3>
-        <p>Play Store financial calculator app with 1k+ installs, multi-language support, and high precision.</p>
-        <p><a href="https://play.google.com/store/apps/details?id=com.prteknology.dca" target="_blank">▶ Play Store</a>
+    <!-- Architect Profile -->
+    <section id="about">
+      <h2><i class="fas fa-id-card"></i> Architect Profile</h2>
+      <div class="m3-card">
+        <p style="font-size: 1.4rem; line-height: 1.5; margin-bottom: 24px; font-weight: 500;">
+          Android Developer with 3.5+ years of experience in designing and implementing high-quality mobile applications.
         </p>
-      </div>
-      <div class="card">
-        <i class="fas fa-video"></i>
-        <h3>Simple Video Player</h3>
-        <p>Offline media player supporting MP4, MKV, AVI with smooth playback and intuitive navigation.</p>
-        <p><a href="https://play.google.com/store/apps/details?id=com.tentek.videoplayer" target="_blank">▶ Play
-            Store</a></p>
-      </div>
-    </div>
-  </section>
-
-  <!-- Contact -->
-  <section id="contact">
-    <h2>Contact</h2>
-    <div class="card-grid">
-      <div class="card">
-        <i class="fas fa-envelope"></i>
-        <p><a href="mailto:pruthivirajm1997@gmail.com">pruthivirajm1997@gmail.com</a></p>
-      </div>
-      <div class="card">
-        <i class="fab fa-github"></i>
-        <p><a href="https://github.com/PruthiviRaj27" target="_blank">GitHub</a></p>
-      </div>
-      <div class="card">
-        <i class="fab fa-linkedin"></i>
-        <p><a href="https://linkedin.com/in/pruthivi-raj-a072a91b0" target="_blank">LinkedIn</a></p>
-      </div>
-    </div>
-  </section>
-
-  <!-- Game Section -->
-  <section id="game">
-    <h2>Play My Games</h2>
-    <div class="card-grid">
-
-      <!-- Android Wars Card -->
-      <div class="card">
-        <img src="assets/android_wars/android-wars-poster.png" alt="Android Wars Poster"
-          style="width:200px; margin-bottom:15px; border-radius:12px; border:2px solid #00ff88;">
-        <h3>Android Wars</h3>
-        <p>You’ve seen my work — now try my game! 🚀 Can you beat the high score in <b>Android Wars</b>?
-          Guide the Android hero, dodge enemies, and survive as long as you can!</p>
-        <button onclick="window.location.href='android-wars.html'"
-          style="margin-top:12px; padding:10px 20px; border:none; border-radius:8px; background:#00ff88; color:#000; font-weight:bold; cursor:pointer; transition:0.3s;">
-          ▶ Play Now
-        </button>
-      </div>
-
-      <!-- Whack-A-Droid Card -->
-      <div class="card">
-        <img src="assets/whack_a_droid/whack-a-droid-poster.png" alt="Whack-A-Droid Poster"
-          style="width:200px; margin-bottom:15px; border-radius:12px; border:2px solid #ffeb3b;">
-        <h3>Whack-A-Droid</h3>
-        <p>Ready to test your reflexes? ⚡ Smash those sneaky Android droids as they pop out of their holes in
-          <b>Whack-A-Droid</b>!
-          Tap fast, rack up points, and see if you can set a new high score! 🎯
+        <p style="color: var(--m3-text-dim); line-height: 1.8;">
+          Expert in <span style="color: var(--m3-primary);">Jetpack Compose</span>, <span style="color: var(--m3-primary);">Kotlin</span>, and <span style="color: var(--m3-primary);">Modern Android Architecture (MVVM/MVI)</span>. Proficient in AI-driven development and delivering enterprise-grade solutions, optimizing app performance, and building reusable SDKs. Strong background in creating seamless user experiences and implementing robust offline-first systems.
         </p>
-        <button onclick="window.location.href='whack-a-droid.html'"
-          style="margin-top:12px; padding:10px 20px; border:none; border-radius:8px; background:#ffeb3b; color:#000; font-weight:bold; cursor:pointer; transition:0.3s;">
-          ▶ Play Now
-        </button>
+        <br>
+        <div class="list-item" style="border-top: 1px solid rgba(255,255,255,0.05); padding-top: 32px;">
+          <div class="item-meta">EDUCATION_INFO</div>
+          <div class="item-content">
+            <h3>Bachelor of Engineering</h3>
+            <p>K. Ramakrishnan College of Engineering // 2015 – 2019</p>
+          </div>
+        </div>
+        <div class="list-item">
+          <div class="item-meta">INTERESTS_LOG</div>
+          <div class="item-content">
+            <p>Exploring Android on-device AI technologies, ExoPlayer internals, and open-source projects. Experimenting with video compression and scalable mobile architectures.</p>
+          </div>
+        </div>
       </div>
+    </section>
 
-      <!-- Jumble Card -->
-      <div class="card">
-        <img src="assets/jumble/jumble-poster.png" alt="Jumble Poster"
-          style="width:200px; margin-bottom:15px; border-radius:12px; border:2px solid #a78bfa;">
-        <h3>Jumble</h3>
-        <p>Think you can outsmart the scramble? 🧩 In <b>Jumble</b>, letters are shuffled and your job is to
-          guess the hidden word! Test your vocabulary, challenge your brain, and climb the score ladder. ✨</p>
-        <button onclick="window.location.href='jumble.html'"
-          style="margin-top:12px; padding:10px 20px; border:none; border-radius:8px; background:#a78bfa; color:#fff; font-weight:bold; cursor:pointer; transition:0.3s;">
-          ▶ Play Now
-        </button>
+    <!-- Technical Arsenal -->
+    <section id="skills">
+      <h2><i class="fas fa-microchip"></i> Technical Arsenal</h2>
+      <div class="bento">
+        <div class="bento-item">
+          <h3>UI_&_FRAMEWORKS</h3>
+          <p>Jetpack Compose, Material 3, View System, Coroutines, Flow.</p>
+          <div class="chip-container">
+            <span class="chip">ANIMATION_ENGINE</span>
+            <span class="chip">M3_UX</span>
+          </div>
+        </div>
+        <div class="bento-item">
+          <h3>ARCHITECTURE_CORE</h3>
+          <p>MVVM, MVI, Clean Architecture, Repository Pattern, Dependency Injection.</p>
+          <div class="chip-container">
+            <span class="chip">SCALABLE_CORE</span>
+            <span class="chip">MODULAR_APPS</span>
+          </div>
+        </div>
+        <div class="bento-item">
+          <h3>AI_&_PRODUCTIVITY</h3>
+          <p>Gemini CLI, GitHub Copilot, Android Studio Gemini (Studio Bot).</p>
+          <div class="chip-container">
+            <span class="chip">AI_CO-PILOT</span>
+            <span class="chip">LLM_INTEGRATION</span>
+          </div>
+        </div>
+        <div class="bento-item">
+          <h3>PERSISTENCE_NET</h3>
+          <p>Room DB, DataStore, Retrofit, OkHttp, WorkManager.</p>
+          <div class="chip-container">
+            <span class="chip">OFFLINE_FIRST</span>
+            <span class="chip">REST_PROTOCOL</span>
+          </div>
+        </div>
+        <div class="bento-item">
+          <h3>SPECIALIZED_SKILLS</h3>
+          <p>ExoPlayer, DRM, Stripe/Razorpay Payments, Firebase, Analytics.</p>
+          <div class="chip-container">
+            <span class="chip">VIDEO_OTT</span>
+            <span class="chip">PAYMENT_GATEWAY</span>
+          </div>
+        </div>
+        <div class="bento-item">
+          <h3>TOOLS_&_DEVOPS</h3>
+          <p>Git, Gradle, CI/CD (GitHub Actions), Fastlane.</p>
+          <div class="chip-container">
+            <span class="chip">BUILD_AUTOMATION</span>
+            <span class="chip">VERSION_CONTROL</span>
+          </div>
+        </div>
       </div>
+    </section>
 
-    </div>
-  </section>
+    <!-- Work Log -->
+    <section id="experience">
+      <h2><i class="fas fa-history"></i> Runtime Journey</h2>
+      <div class="m3-card">
+        <div class="list-item">
+          <div class="item-meta">SEP 2025 - PRESENT</div>
+          <div class="item-content">
+            <h3>Associate Consultant // Infosys</h3>
+            <ul>
+              <li>Strengthened enterprise capabilities by developing expertise in full-stack web technologies (HTML5, CSS3, JavaScript) to enable seamless Android–web integrations.</li>
+              <li>Built internal Proof-of-Concepts (PoCs) using Jetpack Compose and Material 3 to define and standardize modern UI/UX patterns for enterprise applications.</li>
+              <li>Completed advanced certifications in Modern Android Architecture and Web Technologies within the digital transformation unit.</li>
+            </ul>
+          </div>
+        </div>
+        <div class="list-item">
+          <div class="item-meta">JUL 2022 - SEP 2025</div>
+          <div class="item-content">
+            <h3>Android Developer // Testpress Tech Labs LLP</h3>
+            <ul>
+              <li>Led the development of a scalable Android LMS application using Jetpack Compose and modern MVVM architecture, ensuring high performance and maintainability.</li>
+              <li>Integrated secure payment solutions (Razorpay, Stripe) and improved user conversion rates through data-driven optimizations.</li>
+              <li>Streamlined release processes by implementing CI/CD pipelines, reducing manual effort and enabling consistent, reliable deployments.</li>
+              <li>Built and optimized advanced media features, including custom video player integrations and efficient offline support.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Project Trace -->
+    <section id="projects">
+      <h2><i class="fas fa-rocket"></i> Impact Analysis</h2>
+      <div class="m3-card">
+        <div class="list-item">
+          <div class="item-meta">FEATURED_SDK</div>
+          <div class="item-content">
+            <h3>TPStreams Player SDK</h3>
+            <p><strong>ExoPlayer, DRM, HLS, AES</strong></p>
+            <p style="margin-top: 8px;">Developed a modular OTT-grade player SDK. Features include pinch-to-zoom, custom overlays, and robust analytics event hooks for B2B clients.</p>
+          </div>
+        </div>
+        <div class="list-item">
+          <div class="item-meta">FEATURED_APP</div>
+          <div class="item-content">
+            <h3>Testpress LMS App</h3>
+            <p><strong>Kotlin, Compose, Room, Firebase</strong></p>
+            <p style="margin-top: 8px;">Led end-to-end development of the LMS platform. Implemented offline document access and optimized API communication using Repository pattern + Room DB.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Verified Build -->
+    <section id="certifications">
+      <h2><i class="fas fa-certificate"></i> Signed Certificates</h2>
+      <div class="cert-stack">
+        <a href="assets/Infosys Certified Kotlin Android Developer.pdf" target="_blank" class="cert-row">
+          <h3>Infosys Certified Kotlin Android Developer // Jan 9, 2026</h3>
+          <i class="fas fa-chevron-right"></i>
+        </a>
+        <a href="assets/Infosys Certified Front End Web Developer.pdf" target="_blank" class="cert-row">
+          <h3>Infosys Certified Front End Web Developer // Feb 5, 2026</h3>
+          <i class="fas fa-chevron-right"></i>
+        </a>
+        <a href="assets/Infosys Certified Professional - Generative AI for All.pdf" target="_blank" class="cert-row">
+          <h3>Infosys Certified Professional - Generative AI for All // Jan 10, 2026</h3>
+          <i class="fas fa-chevron-right"></i>
+        </a>
+        <a href="assets/Infosys Certified Digital Accessibility Associate.pdf" target="_blank" class="cert-row">
+          <h3>Infosys Certified Digital Accessibility Associate // Jan 10, 2026</h3>
+          <i class="fas fa-chevron-right"></i>
+        </a>
+        <a href="assets/Infosys Certified Associate Mobile Developer.pdf" target="_blank" class="cert-row">
+          <h3>Infosys Certified Associate Mobile Developer // Jan 10, 2026</h3>
+          <i class="fas fa-chevron-right"></i>
+        </a>
+      </div>
+    </section>
+
+    <!-- Contact -->
+    <footer id="contact">
+      <h2 style="justify-content: center;">system.contact()</h2>
+      <div class="social-row">
+        <a href="mailto:pruthivirajm1997@gmail.com"><i class="fas fa-envelope"></i></a>
+        <a href="https://linkedin.com/in/pruthivi-raj-a072a91b0" target="_blank"><i class="fab fa-linkedin"></i></a>
+        <a href="https://github.com/PruthiviRaj27" target="_blank"><i class="fab fa-github"></i></a>
+      </div>
+      <div class="sys-msg">
+        [✓] COMPILATION_SUCCESS: CONTENT_SYNCED_WITH_RESUME.<br>
+        &copy; 2026 PRUTHIVI RAJ M. DESIGNED_FOR_ANDROID.
+      </div>
+    </footer>
+  </main>
 
   <script>
-    // Scroll reveal
-    const sections = document.querySelectorAll("section");
-    const revealOnScroll = () => {
-      const triggerBottom = window.innerHeight * 0.85;
-      sections.forEach(sec => {
-        if (sec.getBoundingClientRect().top < triggerBottom) {
-          sec.classList.add("visible");
+    // System Clock
+    function updateClock() {
+      const now = new Date();
+      const time = now.getHours().toString().padStart(2, '0') + ":" + now.getMinutes().toString().padStart(2, '0');
+      document.getElementById('time').innerText = time;
+    }
+    setInterval(updateClock, 1000);
+    updateClock();
+
+    // Active Link Highlighting
+    const sections = document.querySelectorAll('section, header');
+    const navLinks = document.querySelectorAll('.nav-rail a, .bottom-nav a');
+
+    window.onscroll = () => {
+      let current = "";
+      sections.forEach(section => {
+        const sectionTop = section.offsetTop;
+        if (pageYOffset >= sectionTop - 150) {
+          current = section.getAttribute("id");
+        }
+      });
+
+      navLinks.forEach(link => {
+        link.classList.remove("active");
+        if (link.getAttribute("href").includes(current)) {
+          link.classList.add("active");
         }
       });
     };
-    window.addEventListener("scroll", revealOnScroll);
-    revealOnScroll();
-
-    // Particles
-    const canvas = document.getElementById("particles");
-    const ctx = canvas.getContext("2d");
-    let particles = [];
-
-    function resizeCanvas() {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-    }
-    window.addEventListener("resize", resizeCanvas);
-    resizeCanvas();
-
-    function createParticles() {
-      particles = [];
-      for (let i = 0; i < 120; i++) {
-        particles.push({
-          x: Math.random() * canvas.width,
-          y: Math.random() * canvas.height,
-          radius: Math.random() * 2,
-          dx: (Math.random() - 0.5) * 0.6,
-          dy: (Math.random() - 0.5) * 0.6
-        });
-      }
-    }
-    createParticles();
-
-    function drawParticles() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      particles.forEach(p => {
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-        ctx.fillStyle = "#00d4ff";
-        ctx.fill();
-        p.x += p.dx;
-        p.y += p.dy;
-        if (p.x < 0 || p.x > canvas.width) p.dx *= -1;
-        if (p.y < 0 || p.y > canvas.height) p.dy *= -1;
-      });
-      requestAnimationFrame(drawParticles);
-    }
-    drawParticles();
-
-    // Nav toggle
-    const navToggle = document.getElementById("navToggle");
-    const navbar = document.getElementById("navbar");
-    navToggle.addEventListener("click", () => {
-      navbar.classList.toggle("show");
-      navToggle.innerHTML = navbar.classList.contains("show")
-        ? '<i class="fas fa-times"></i>'
-        : '<i class="fas fa-bars"></i>';
-    });
   </script>
 </body>
 
